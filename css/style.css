@@ -822,6 +822,32 @@ body.admin-mode .admin-add-form { display: flex; }
   top: 100px;
 }
 
+.about-photo {
+  margin: 0 0 var(--space-4);
+  max-width: 220px;
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: var(--space-2) var(--space-2) 0.9em;
+  box-shadow: 0 14px 24px -14px rgba(43,33,20,0.35);
+  transform: rotate(-2deg);
+}
+
+.about-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 2px;
+}
+
+.about-photo figcaption {
+  font-family: var(--font-vintage);
+  text-align: center;
+  margin-top: 0.7em;
+  color: var(--clay-deep);
+  font-size: 0.95rem;
+}
+
 .fact-list {
   list-style: none;
   margin: var(--space-3) 0 0;
@@ -1521,16 +1547,19 @@ body.admin-mode .admin-add-form { display: flex; }
 .pin-card:nth-child(3n+2):hover { transform: rotate(1.5deg) translateY(-4px) scale(1.02); }
 .pin-card:nth-child(3n+3):hover { transform: rotate(-1deg) translateY(-4px) scale(1.02); }
 
+/* a little strip of washi tape in the corner, instead of a plain dot
+   sitting dead-center where it used to overlap long topic labels */
 .pin-card .pin-dot {
   position: absolute;
-  top: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 14px;
+  top: -9px;
+  left: 14px;
+  width: 30px;
   height: 14px;
-  border-radius: 50%;
-  background: var(--clay-deep);
-  box-shadow: 0 2px 3px rgba(43,33,20,0.35);
+  background: var(--clay);
+  opacity: 0.9;
+  border-radius: 2px;
+  transform: rotate(-7deg);
+  box-shadow: 0 2px 3px rgba(43,33,20,0.25);
 }
 
 .pin-card .pin-date {
