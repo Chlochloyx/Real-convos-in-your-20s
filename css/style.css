@@ -1572,7 +1572,19 @@ body.admin-mode .admin-add-form { display: flex; }
   right: var(--space-2);
 }
 
-.pin-card .pin-icon { width: 26px; height: 26px; margin-bottom: 0.6em; }
+/* the matcha pet's little sprout pokes up near the very top of its own
+   viewBox, so the icon needs real breathing room above it, otherwise it
+   grazes into the topic label sitting up in the corner. also giving this
+   an explicit size + centering on purpose now, since a plain <span> with
+   width/height set has no effect while it stays inline (those rules were
+   silently doing nothing before) */
+.pin-card .pin-icon {
+  display: block;
+  width: 68%;
+  max-width: 150px;
+  aspect-ratio: 1 / 1;
+  margin: 1.6em auto 0.6em;
+}
 
 .admin-toggle {
   display: inline-block;
