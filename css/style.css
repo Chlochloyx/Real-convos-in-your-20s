@@ -618,10 +618,14 @@ h1, h2, h3 {
 
 .currently .wrap {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2) var(--space-4);
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: var(--space-4);
   padding: var(--space-3) var(--space-3);
+  scrollbar-width: thin;
 }
+
+.currently .wrap span { flex: none; white-space: nowrap; }
 
 .currently .wrap span {
   display: inline-flex;
@@ -734,12 +738,37 @@ h1, h2, h3 {
 }
 
 .journal-row {
+  position: relative;
   display: grid;
   grid-template-columns: 130px 1fr;
   gap: var(--space-3);
   padding: var(--space-3) 0;
   border-top: 1px solid var(--line);
 }
+
+.journal-delete {
+  display: none;
+  position: absolute;
+  top: var(--space-3);
+  right: 0;
+  font-size: 0.8rem;
+}
+
+body.admin-mode .journal-delete { display: inline-flex; }
+
+.admin-add-form {
+  display: none;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 46ch;
+  margin-bottom: var(--space-4);
+  padding: var(--space-3);
+  background: var(--clay-pale);
+  border: 1px dashed var(--clay-deep);
+  border-radius: 10px;
+}
+
+body.admin-mode .admin-add-form { display: flex; }
 
 .journal-row:last-child { border-bottom: 1px solid var(--line); }
 
@@ -1532,7 +1561,7 @@ h1, h2, h3 {
 
 .admin-bar.visible { display: flex; }
 
-.admin-bar #admin-active {
+.admin-bar > div[id^="admin-active"] {
   display: flex;
   align-items: center;
   gap: var(--space-2);

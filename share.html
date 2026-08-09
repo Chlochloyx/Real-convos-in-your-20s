@@ -59,7 +59,6 @@
       <p class="eyebrow">the shared roll</p>
       <h1 class="page-title" style="max-width: 22ch;">A corner of the internet for your story too.</h1>
       <p class="hero-lede" style="max-width: 58ch; margin-top: var(--space-2);">This part isn't just mine. Drop a memory, a rant, whatever's been sitting half-written in your notes app. Stay anonymous if you want. Reply to someone else's if it hit close. That's kind of the point.</p>
-      <button type="button" id="admin-toggle" class="text-link admin-toggle">manage posts</button>
     </div>
   </section>
 
@@ -75,16 +74,16 @@
         <button class="topic-chip" data-filter="random" type="button">🍵 random</button>
       </div>
 
-      <div class="admin-bar" id="admin-bar">
-        <form id="admin-form" class="admin-form" hidden>
-          <input type="password" id="admin-passcode" placeholder="admin passcode" autocomplete="off">
+      <div class="admin-bar" id="admin-bar-pins">
+        <form id="admin-form-pins" class="admin-form" hidden>
+          <input type="password" id="admin-passcode-pins" placeholder="admin passcode" autocomplete="off">
           <button type="submit" class="btn btn-ghost">unlock</button>
-          <span class="admin-error" id="admin-error"></span>
+          <span class="admin-error" id="admin-error-pins"></span>
         </form>
-        <div id="admin-active" hidden>
+        <div id="admin-active-pins" hidden>
           <strong>managing posts</strong>
           <span>click the × on any pin to remove it from this device</span>
-          <button type="button" class="text-link" id="admin-exit">exit</button>
+          <button type="button" class="text-link" id="admin-exit-pins">exit</button>
         </div>
       </div>
 

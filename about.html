@@ -101,6 +101,23 @@
         <h2>Travel while you can. A few of my experiences.</h2>
         <p style="max-width: 58ch; color: var(--ink-soft); margin-top: var(--space-2);">I did two rounds of NUS Overseas Colleges (NOC), in Vietnam and New York, plus a separate internship in China. I'm not sharing this to show off, just being upfront that I've had to step outside my comfort zone a few times too, scared each time if I'm honest. If you're curious about NOC, thinking of applying, or just want to hear more, feel free to <a href="grab-matcha.html">reach out</a>, happy to share what actually helped.</p>
       </div>
+
+      <div class="admin-bar" id="admin-bar-about">
+        <form id="admin-form-about" class="admin-form" hidden>
+          <input type="password" id="admin-passcode-about" placeholder="admin passcode" autocomplete="off">
+          <button type="submit" class="btn btn-ghost">unlock</button>
+          <span class="admin-error" id="admin-error-about"></span>
+        </form>
+        <div id="admin-active-about" hidden>
+          <strong>managing travel stories</strong>
+          <span>pick one to edit its story</span>
+          <button type="button" class="btn btn-ghost admin-edit-place" data-place="vietnam">edit vietnam</button>
+          <button type="button" class="btn btn-ghost admin-edit-place" data-place="newyork">edit new york</button>
+          <button type="button" class="btn btn-ghost admin-edit-place" data-place="china">edit china</button>
+          <button type="button" class="text-link" id="admin-exit-about">exit</button>
+        </div>
+      </div>
+
       <div class="story-grid">
         <button type="button" class="story-card" data-place="vietnam" aria-haspopup="dialog">
           <div class="story-card-top">
@@ -113,7 +130,7 @@
               <span>HCMC</span>
             </div>
           </div>
-          <p>I almost didn't go, I'd never been away from home that long. Ended up spending a few months in Ho Chi Minh City on NOC, mostly handling logistics for an 80-student trip, and just figuring it out as I went.</p>
+          <p id="card-body-vietnam">I almost didn't go, I'd never been away from home that long. Ended up spending a few months in Ho Chi Minh City on NOC, mostly handling logistics for an 80-student exchange trip and learning fast, some of it the hard way.</p>
           <span class="text-link story-card-more">read more<svg viewBox="0 0 16 16" fill="none"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
         <button type="button" class="story-card" data-place="newyork" aria-haspopup="dialog">
@@ -127,7 +144,7 @@
               <span>NYC</span>
             </div>
           </div>
-          <p>Moving there alone was probably the most out of my depth I've ever felt. A year in New York through NOC, working at a small accelerator, slowly learning to navigate a city that doesn't slow down for anyone, including me.</p>
+          <p id="card-body-newyork">Moving there alone was probably the most out of my depth I've ever felt. A year in New York through NOC, working at a small accelerator, slowly learning to navigate a city that doesn't slow down for anyone, including me.</p>
           <span class="text-link story-card-more">read more<svg viewBox="0 0 16 16" fill="none"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
         <button type="button" class="story-card" data-place="china" aria-haspopup="dialog">
@@ -141,7 +158,7 @@
               <span>GZ</span>
             </div>
           </div>
-          <p>Said yes to Guangzhou before I let myself overthink it. A separate internship doing brand marketing, a completely different company and industry, and another reminder I can handle more than I give myself credit for.</p>
+          <p id="card-body-china">Said yes to Guangzhou before I let myself overthink it. A separate internship doing brand marketing, a completely different company and industry, and another reminder I can handle more than I give myself credit for.</p>
           <span class="text-link story-card-more">read more<svg viewBox="0 0 16 16" fill="none"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
       </div>
@@ -150,9 +167,27 @@
     <div class="memory-modal" id="place-modal">
       <div class="memory-modal-inner">
         <button class="memory-close" id="place-close" aria-label="close">&times;</button>
-        <p class="eyebrow" id="place-eyebrow" style="justify-content: center;"></p>
-        <h3 id="place-title"></h3>
-        <div id="place-body"></div>
+        <div id="place-view">
+          <p class="eyebrow" id="place-eyebrow" style="justify-content: center;"></p>
+          <h3 id="place-title"></h3>
+          <div id="place-body"></div>
+        </div>
+        <form id="place-edit-form" class="admin-add-form" hidden style="max-width: none;">
+          <p class="eyebrow" id="place-edit-eyebrow" style="justify-content: center;"></p>
+          <h3 id="place-edit-title"></h3>
+          <label class="pin-field">
+            <span>short version (shown on the card)</span>
+            <textarea id="place-edit-short" rows="3" maxlength="240" required></textarea>
+          </label>
+          <label class="pin-field">
+            <span>full story (shown when opened)</span>
+            <textarea id="place-edit-body" rows="9" maxlength="2000" required></textarea>
+          </label>
+          <div style="display: flex; gap: var(--space-2);">
+            <button type="submit" class="btn">save</button>
+            <button type="button" class="btn btn-ghost" id="place-edit-cancel">cancel</button>
+          </div>
+        </form>
       </div>
     </div>
   </section>

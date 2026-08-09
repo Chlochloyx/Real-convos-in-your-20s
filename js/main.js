@@ -215,23 +215,121 @@
   }
 
   /* -------------------------------------------------------------
-     admin: a lightweight, client-side way to hide inappropriate
-     pins. there's no real server behind this site yet, so this
-     only affects what this specific browser/device shows, not what
-     other visitors see on theirs. once there's a real shared
-     backend, moderation should move server-side.
+     admin: a lightweight, client-side way for Chloe to manage her
+     own site (hide pins, edit journal entries, edit travel stories).
+     there's no real server behind this site yet, so unlocking admin
+     mode only affects what this specific browser/device shows, not
+     what other visitors see on theirs. once there's a real shared
+     backend, this should move server-side.
+
+     there is no visible "manage" button anywhere on the site. admin
+     mode is unlocked by clicking the small copyright line in the
+     footer five times quickly, which reveals a passcode box. this
+     keeps it out of the way for ordinary visitors, but it's "hidden"
+     rather than truly secure: the passcode still lives in this file,
+     so anyone who reads the page source could find it.
      ------------------------------------------------------------- */
 
-  var ADMIN_PASSCODE = "chloematcha";
+  var ADMIN_PASSCODE = "onlyyxcanaccess";
   var ADMIN_KEY = "fnm-admin-mode";
   var HIDDEN_SEEDS_KEY = "fnm-hidden-seeds";
-  var adminToggle = document.getElementById("admin-toggle");
-  var adminExit = document.getElementById("admin-exit");
-  var adminBar = document.getElementById("admin-bar");
-  var adminForm = document.getElementById("admin-form");
-  var adminActive = document.getElementById("admin-active");
-  var adminPasscodeInput = document.getElementById("admin-passcode");
-  var adminError = document.getElementById("admin-error");
+  var HIDDEN_JOURNAL_KEY = "fnm-hidden-journal";
+  var JOURNAL_ENTRIES_KEY = "fnm-journal-entries";
+  var TRAVEL_OVERRIDES_KEY = "fnm-travel-overrides";
+
+  function isAdminOn() {
+    try {
+      return window.localStorage.getItem(ADMIN_KEY) === "1";
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function setAdminMode(on) {
+    document.body.classList.toggle("admin-mode", on);
+    try {
+      window.localStorage.setItem(ADMIN_KEY, on ? "1" : "");
+    } catch (e) {
+      /* ignore */
+    }
+    adminBars.forEach(function (bar) { bar.refresh(); });
+  }
+
+  // everything here is plain in-page UI on purpose. window.prompt/alert/confirm
+  // get silently blocked inside a sandboxed preview iframe (like this one on
+  // claude.ai), so relying on them made the whole feature look broken.
+  function setupAdminBar(suffix) {
+    var bar = document.getElementById("admin-bar-" + suffix);
+    if (!bar) return null;
+    var form = document.getElementById("admin-form-" + suffix);
+    var active = document.getElementById("admin-active-" + suffix);
+    var passInput = document.getElementById("admin-passcode-" + suffix);
+    var errorEl = document.getElementById("admin-error-" + suffix);
+    var exitBtn = document.getElementById("admin-exit-" + suffix);
+
+    function refresh() {
+      var on = isAdminOn();
+      bar.classList.toggle("visible", on);
+      if (form) form.hidden = on;
+      if (active) active.hidden = !on;
+    }
+
+    function reveal() {
+      bar.classList.add("visible");
+      if (!isAdminOn()) {
+        if (errorEl) errorEl.textContent = "";
+        if (passInput) { passInput.value = ""; passInput.focus(); }
+      }
+    }
+
+    if (form) {
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var code = passInput ? passInput.value.trim() : "";
+        if (code === ADMIN_PASSCODE) {
+          setAdminMode(true);
+        } else if (errorEl) {
+          errorEl.textContent = "that's not it, try again";
+          if (passInput) { passInput.value = ""; passInput.focus(); }
+        }
+      });
+    }
+
+    if (exitBtn) {
+      exitBtn.addEventListener("click", function () { setAdminMode(false); });
+    }
+
+    refresh();
+    return { reveal: reveal, refresh: refresh };
+  }
+
+  var adminBars = [
+    setupAdminBar("pins"),
+    setupAdminBar("journal"),
+    setupAdminBar("about")
+  ].filter(Boolean);
+
+  if (isAdminOn()) document.body.classList.add("admin-mode");
+
+  // secret unlock: click the footer's copyright line 5 times within
+  // 2 seconds. nothing about it looks clickable on purpose, so it
+  // stays out of the way for everyone else.
+  (function () {
+    var trigger = document.querySelector(".footer-fine");
+    if (!trigger || !adminBars.length) return;
+    var clicks = 0;
+    var resetTimer = null;
+    trigger.style.cursor = "default";
+    trigger.addEventListener("click", function () {
+      clicks += 1;
+      clearTimeout(resetTimer);
+      resetTimer = setTimeout(function () { clicks = 0; }, 2000);
+      if (clicks >= 5) {
+        clicks = 0;
+        adminBars.forEach(function (bar) { bar.reveal(); });
+      }
+    });
+  })();
 
   function loadHiddenSeeds() {
     try {
@@ -267,71 +365,12 @@
     }
   }
 
-  // everything here is plain in-page UI on purpose. window.prompt/alert/confirm
-  // get silently blocked inside a sandboxed preview iframe (like this one on
-  // claude.ai), so relying on them made the whole feature look broken.
-  function showAdminBar(view) {
-    if (!adminBar) return;
-    adminBar.classList.add("visible");
-    if (adminForm) adminForm.hidden = view !== "form";
-    if (adminActive) adminActive.hidden = view !== "active";
-  }
-
-  function hideAdminBar() {
-    if (adminBar) adminBar.classList.remove("visible");
-  }
-
-  function setAdminMode(on) {
-    document.body.classList.toggle("admin-mode", on);
-    try {
-      window.localStorage.setItem(ADMIN_KEY, on ? "1" : "");
-    } catch (e) {
-      /* ignore */
-    }
-    if (on) {
-      showAdminBar("active");
-    } else {
-      hideAdminBar();
-    }
-  }
-
   if (pinGrid) {
     // hide any seed pins this admin already removed on this device
     loadHiddenSeeds().forEach(function (pinId) {
       var el = pinGrid.querySelector('.pin-card[data-pin-id="' + pinId + '"]');
       if (el) el.remove();
     });
-
-    var alreadyAdmin = false;
-    try { alreadyAdmin = window.localStorage.getItem(ADMIN_KEY) === "1"; } catch (e) { /* ignore */ }
-    if (alreadyAdmin) setAdminMode(true);
-
-    if (adminToggle) {
-      adminToggle.addEventListener("click", function () {
-        if (document.body.classList.contains("admin-mode")) return;
-        if (adminError) adminError.textContent = "";
-        if (adminPasscodeInput) adminPasscodeInput.value = "";
-        showAdminBar("form");
-        if (adminPasscodeInput) adminPasscodeInput.focus();
-      });
-    }
-
-    if (adminForm) {
-      adminForm.addEventListener("submit", function (e) {
-        e.preventDefault();
-        var code = adminPasscodeInput ? adminPasscodeInput.value.trim() : "";
-        if (code === ADMIN_PASSCODE) {
-          setAdminMode(true);
-        } else if (adminError) {
-          adminError.textContent = "that's not it, try again";
-          if (adminPasscodeInput) { adminPasscodeInput.value = ""; adminPasscodeInput.focus(); }
-        }
-      });
-    }
-
-    if (adminExit) {
-      adminExit.addEventListener("click", function () { setAdminMode(false); });
-    }
 
     pinGrid.addEventListener("click", function (e) {
       var btn = e.target.closest(".pin-delete");
@@ -416,6 +455,174 @@
         e.preventDefault();
         focusStory();
       }
+    });
+  }
+
+  /* -------------------------------------------------------------
+     journal (journal.html): Chloe can add new entries and remove
+     any entry (seed or her own) while admin mode is unlocked. same
+     local-only storage story as the shared roll above.
+     ------------------------------------------------------------- */
+
+  var journalList = document.getElementById("journal-list");
+  var journalForm = document.getElementById("journal-form");
+
+  function loadHiddenJournal() {
+    try {
+      var raw = window.localStorage.getItem(HIDDEN_JOURNAL_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function hideJournalEntry(entryId) {
+    try {
+      var hidden = loadHiddenJournal();
+      if (hidden.indexOf(entryId) === -1) {
+        hidden.push(entryId);
+        window.localStorage.setItem(HIDDEN_JOURNAL_KEY, JSON.stringify(hidden));
+      }
+    } catch (e) {
+      /* storage unavailable, entry still disappears for this page view */
+    }
+  }
+
+  function loadJournalEntries() {
+    try {
+      var raw = window.localStorage.getItem(JOURNAL_ENTRIES_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveJournalEntries(list) {
+    try {
+      window.localStorage.setItem(JOURNAL_ENTRIES_KEY, JSON.stringify(list));
+    } catch (e) {
+      /* ignore */
+    }
+  }
+
+  function journalDateLabel(timestamp) {
+    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    var d = new Date(timestamp);
+    return months[d.getMonth()] + " " + d.getDate();
+  }
+
+  function renderJournalEntry(entry, animate) {
+    if (!journalList) return;
+    var row = document.createElement("div");
+    row.className = "journal-row";
+    row.setAttribute("data-entry-id", entry.id);
+    if (animate) row.style.opacity = "0";
+
+    var del = document.createElement("button");
+    del.type = "button";
+    del.className = "journal-delete text-link";
+    del.setAttribute("data-entry-id", entry.id);
+    del.setAttribute("aria-label", "delete this entry");
+    del.textContent = "remove";
+
+    var dateEl = document.createElement("div");
+    dateEl.className = "journal-date";
+    dateEl.textContent = journalDateLabel(entry.created || Date.now());
+
+    var body = document.createElement("div");
+    body.className = "journal-entry";
+    if (entry.tag) {
+      var tagEl = document.createElement("span");
+      tagEl.className = "journal-tag";
+      tagEl.textContent = entry.tag;
+      body.appendChild(tagEl);
+    }
+    var h3 = document.createElement("h3");
+    h3.textContent = entry.title;
+    var p = document.createElement("p");
+    p.textContent = entry.body;
+    body.appendChild(h3);
+    body.appendChild(p);
+
+    row.appendChild(del);
+    row.appendChild(dateEl);
+    row.appendChild(body);
+    journalList.insertBefore(row, journalList.firstChild);
+
+    if (animate) {
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { row.style.opacity = "1"; });
+      });
+    }
+  }
+
+  if (journalList) {
+    // hide any seed entries this admin already removed on this device
+    loadHiddenJournal().forEach(function (entryId) {
+      var el = journalList.querySelector('.journal-row[data-entry-id="' + entryId + '"]');
+      if (el) el.remove();
+    });
+
+    // newest-first, so entries she's added just now show at the top
+    loadJournalEntries().slice().reverse().forEach(function (entry) {
+      renderJournalEntry(entry, false);
+    });
+
+    journalList.addEventListener("click", function (e) {
+      var btn = e.target.closest(".journal-delete");
+      if (!btn) return;
+      var entryId = btn.getAttribute("data-entry-id");
+      if (!entryId) return;
+
+      // same two-click "sure?" pattern as the shared roll: first click
+      // arms it, second click within a few seconds actually deletes it
+      if (!btn.classList.contains("confirming")) {
+        btn.classList.add("confirming");
+        btn.textContent = "sure?";
+        btn.setAttribute("aria-label", "click again to confirm delete");
+        clearTimeout(btn._confirmTimer);
+        btn._confirmTimer = setTimeout(function () {
+          btn.classList.remove("confirming");
+          btn.textContent = "remove";
+          btn.setAttribute("aria-label", "delete this entry");
+        }, 3000);
+        return;
+      }
+
+      if (entryId.indexOf("seed-") === 0) {
+        hideJournalEntry(entryId);
+      } else {
+        var stored = loadJournalEntries().filter(function (entry) { return entry.id !== entryId; });
+        saveJournalEntries(stored);
+      }
+      var row = btn.closest(".journal-row");
+      if (row) row.remove();
+    });
+  }
+
+  if (journalForm) {
+    journalForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var titleEl = document.getElementById("journal-title-input");
+      var tagEl = document.getElementById("journal-tag-input");
+      var bodyEl = document.getElementById("journal-body-input");
+      var title = titleEl ? titleEl.value.trim() : "";
+      var body = bodyEl ? bodyEl.value.trim() : "";
+      if (!title || !body) return;
+
+      var entry = {
+        id: "journal-" + Date.now() + "-" + Math.floor(Math.random() * 1000),
+        title: title,
+        tag: tagEl ? tagEl.value.trim() : "",
+        body: body,
+        created: Date.now()
+      };
+
+      var stored = loadJournalEntries();
+      stored.push(entry);
+      saveJournalEntries(stored);
+      renderJournalEntry(entry, true);
+      journalForm.reset();
     });
   }
 
@@ -782,46 +989,147 @@
 
   /* -------------------------------------------------------------
      about page: click a travel card for a longer version of that
-     one place
+     one place. while admin mode is unlocked, Chloe can also edit
+     both the short card text and the full story from right here,
+     saved to this device via localStorage.
      ------------------------------------------------------------- */
 
   var placeDetails = {
     vietnam: {
       eyebrow: "NOC · Ho Chi Minh City",
       title: "Vietnam",
-      body: "The short version undersells it a bit. Mostly I was there to help run logistics for a group of eighty students on exchange, which meant a lot of spreadsheets, chasing people for passport details, and rebooking things last minute whenever plans changed. I hadn't lived away from home that long before, so most of the actual growth happened outside of work hours: figuring out a new city on my own, eating alone more than I expected to, and slowly getting more comfortable with that."
+      short: "I almost didn't go, I'd never been away from home that long. Ended up spending a few months in Ho Chi Minh City on NOC, mostly handling logistics for an 80-student exchange trip and learning fast, some of it the hard way.",
+      body: "The short version undersells it a bit. NOC sent me to Ho Chi Minh City to help run logistics for a group of eighty students on exchange, which in practice meant an endless spreadsheet, chasing people for passport details, and rebooking flights and homestays last minute whenever plans changed without warning.\n\nI hadn't lived away from home that long before, so most of the actual growth happened outside work hours: figuring out a new city on my own, ordering food in broken Vietnamese and getting it wrong more than once, and slowly getting used to eating alone without it feeling like a big deal.\n\nThere was a stretch in week two where I sat in a hostel bathroom and cried because the wifi was too slow to call home properly. I stayed anyway. Somewhere around month two it stopped feeling like survival and started feeling like actually living there, motorbikes, egg coffee, and all."
     },
     newyork: {
       eyebrow: "NOC · New York City",
       title: "New York",
-      body: "NOC placed me in New York for a year, working at a small accelerator. Honestly, the city was the bigger adjustment, not the job. I lived in an apartment with a radiator that never fully turned off, which taught me how to sleep through almost anything. It also taught me how to budget properly for the first time, and how much I don't actually mind my own company, which surprised me more than it probably should have."
+      short: "Moving there alone was probably the most out of my depth I've ever felt. A year in New York through NOC, working at a small accelerator, slowly learning to navigate a city that doesn't slow down for anyone, including me.",
+      body: "NOC placed me in New York for a year, working at a small accelerator that supported early-stage founders. I sat in on pitch meetings I barely understood at first, and slowly learned how much unglamorous operational work sits underneath a \"cool startup job.\"\n\nHonestly, the city itself was the bigger adjustment, not the job. I lived in a walk-up with a radiator that never fully turned off, which taught me how to sleep through almost anything. It also taught me how to budget properly for the first time, since New York does not forgive financial carelessness.\n\nI spent my first Thanksgiving there completely alone, ordered dumplings, and called it a win. That year taught me how much I don't actually mind my own company, which surprised me more than it probably should have."
     },
     china: {
       eyebrow: "internship · Guangzhou",
       title: "China",
-      body: "This one was separate from NOC, a brand marketing internship at a completely different company. A few things it actually taught me: how to disagree with someone more senior without shrinking, how to ask a basic question in a meeting when nobody else will, and how to still show up the next day even when the day before didn't go well."
+      short: "Said yes to Guangzhou before I let myself overthink it. A separate internship doing brand marketing, a completely different company and industry, and another reminder I can handle more than I give myself credit for.",
+      body: "This one was separate from NOC: a brand marketing internship in Guangzhou, at a company in a completely different industry from anything I'd worked in before. A lot of what I actually took away from it wasn't about marketing at all.\n\nA few things it taught me: how to disagree with someone more senior without shrinking, how to ask a basic question out loud in a meeting when nobody else will, and how to still show up the next day even when the day before didn't go well.\n\nI also spent a lot of weekends wandering Guangzhou on my own, getting lost on purpose, eating things I couldn't pronounce, and slowly getting more comfortable being somewhere unfamiliar with no one to fall back on."
     }
   };
 
+  // apply any edits Chloe has saved on this device before anything renders
+  (function () {
+    try {
+      var raw = window.localStorage.getItem(TRAVEL_OVERRIDES_KEY);
+      var overrides = raw ? JSON.parse(raw) : {};
+      Object.keys(overrides).forEach(function (place) {
+        if (!placeDetails[place]) return;
+        if (overrides[place].short) placeDetails[place].short = overrides[place].short;
+        if (overrides[place].body) placeDetails[place].body = overrides[place].body;
+        var cardEl = document.getElementById("card-body-" + place);
+        if (cardEl) cardEl.textContent = placeDetails[place].short;
+      });
+    } catch (e) {
+      /* ignore */
+    }
+  })();
+
+  function saveTravelOverride(place, short, body) {
+    try {
+      var raw = window.localStorage.getItem(TRAVEL_OVERRIDES_KEY);
+      var overrides = raw ? JSON.parse(raw) : {};
+      overrides[place] = { short: short, body: body };
+      window.localStorage.setItem(TRAVEL_OVERRIDES_KEY, JSON.stringify(overrides));
+    } catch (e) {
+      /* ignore */
+    }
+  }
+
   var placeModal = document.getElementById("place-modal");
   var placeClose = document.getElementById("place-close");
+  var placeView = document.getElementById("place-view");
   var placeEyebrow = document.getElementById("place-eyebrow");
   var placeTitle = document.getElementById("place-title");
   var placeBody = document.getElementById("place-body");
   var storyCards = document.querySelectorAll(".story-card[data-place]");
+  var placeEditForm = document.getElementById("place-edit-form");
+  var placeEditEyebrow = document.getElementById("place-edit-eyebrow");
+  var placeEditTitle = document.getElementById("place-edit-title");
+  var placeEditShort = document.getElementById("place-edit-short");
+  var placeEditBody = document.getElementById("place-edit-body");
+  var placeEditCancel = document.getElementById("place-edit-cancel");
+  var editPlaceButtons = document.querySelectorAll(".admin-edit-place");
+  var currentEditPlace = null;
+
+  function fillPlaceBody(text) {
+    if (!placeBody) return;
+    placeBody.innerHTML = "";
+    (text || "").split("\n\n").forEach(function (para) {
+      var p = document.createElement("p");
+      p.textContent = para;
+      placeBody.appendChild(p);
+    });
+  }
+
+  function showPlaceView(place) {
+    var detail = placeDetails[place];
+    if (!detail) return;
+    currentEditPlace = null;
+    if (placeEyebrow) placeEyebrow.textContent = detail.eyebrow;
+    if (placeTitle) placeTitle.textContent = detail.title;
+    fillPlaceBody(detail.body);
+    if (placeView) placeView.hidden = false;
+    if (placeEditForm) placeEditForm.hidden = true;
+  }
+
+  function showPlaceEdit(place) {
+    var detail = placeDetails[place];
+    if (!detail) return;
+    currentEditPlace = place;
+    if (placeEditEyebrow) placeEditEyebrow.textContent = detail.eyebrow;
+    if (placeEditTitle) placeEditTitle.textContent = detail.title;
+    if (placeEditShort) placeEditShort.value = detail.short || "";
+    if (placeEditBody) placeEditBody.value = detail.body || "";
+    if (placeView) placeView.hidden = true;
+    if (placeEditForm) placeEditForm.hidden = false;
+    placeModal.classList.add("open");
+    if (placeEditShort) placeEditShort.focus();
+  }
 
   if (placeModal && storyCards.length) {
     storyCards.forEach(function (card) {
       card.addEventListener("click", function () {
-        var detail = placeDetails[card.getAttribute("data-place")];
-        if (!detail) return;
-        if (placeEyebrow) placeEyebrow.textContent = detail.eyebrow;
-        if (placeTitle) placeTitle.textContent = detail.title;
-        if (placeBody) placeBody.textContent = detail.body;
+        showPlaceView(card.getAttribute("data-place"));
         placeModal.classList.add("open");
         if (placeClose) placeClose.focus();
       });
     });
+
+    editPlaceButtons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        showPlaceEdit(btn.getAttribute("data-place"));
+      });
+    });
+
+    if (placeEditForm) {
+      placeEditForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (!currentEditPlace || !placeDetails[currentEditPlace]) return;
+        var short = placeEditShort ? placeEditShort.value.trim() : "";
+        var body = placeEditBody ? placeEditBody.value.trim() : "";
+        if (!short || !body) return;
+        placeDetails[currentEditPlace].short = short;
+        placeDetails[currentEditPlace].body = body;
+        saveTravelOverride(currentEditPlace, short, body);
+        var cardEl = document.getElementById("card-body-" + currentEditPlace);
+        if (cardEl) cardEl.textContent = short;
+        showPlaceView(currentEditPlace);
+      });
+    }
+
+    if (placeEditCancel) {
+      placeEditCancel.addEventListener("click", function () {
+        if (currentEditPlace) showPlaceView(currentEditPlace);
+      });
+    }
 
     var closePlace = function () { placeModal.classList.remove("open"); };
     if (placeClose) placeClose.addEventListener("click", closePlace);

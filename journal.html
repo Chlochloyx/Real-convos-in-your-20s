@@ -63,9 +63,39 @@
 
   <section class="section reveal">
     <div class="wrap">
-      <div class="journal-list notebook">
+      <div class="admin-bar" id="admin-bar-journal">
+        <form id="admin-form-journal" class="admin-form" hidden>
+          <input type="password" id="admin-passcode-journal" placeholder="admin passcode" autocomplete="off">
+          <button type="submit" class="btn btn-ghost">unlock</button>
+          <span class="admin-error" id="admin-error-journal"></span>
+        </form>
+        <div id="admin-active-journal" hidden>
+          <strong>managing journal</strong>
+          <span>click "remove" on any entry, or add a new one below</span>
+          <button type="button" class="text-link" id="admin-exit-journal">exit</button>
+        </div>
+      </div>
 
-        <div class="journal-row">
+      <form id="journal-form" class="admin-add-form" hidden>
+        <label class="pin-field">
+          <span>entry title</span>
+          <input type="text" id="journal-title-input" placeholder="what's this one about?" required maxlength="90">
+        </label>
+        <label class="pin-field">
+          <span>tag (optional)</span>
+          <input type="text" id="journal-tag-input" placeholder="e.g. school, career, life" maxlength="20">
+        </label>
+        <label class="pin-field">
+          <span>the actual entry</span>
+          <textarea id="journal-body-input" rows="3" placeholder="what's actually going on..." required maxlength="600"></textarea>
+        </label>
+        <button type="submit" class="btn">add to journal</button>
+      </form>
+
+      <div class="journal-list notebook" id="journal-list">
+
+        <div class="journal-row" data-entry-id="seed-j1">
+          <button type="button" class="journal-delete text-link" data-entry-id="seed-j1" aria-label="delete this entry">remove</button>
           <div class="journal-date">Aug 8</div>
           <div class="journal-entry">
             <span class="journal-tag">school</span>
@@ -74,7 +104,8 @@
           </div>
         </div>
 
-        <div class="journal-row">
+        <div class="journal-row" data-entry-id="seed-j2">
+          <button type="button" class="journal-delete text-link" data-entry-id="seed-j2" aria-label="delete this entry">remove</button>
           <div class="journal-date">Jul 27</div>
           <div class="journal-entry">
             <span class="journal-tag">career</span>
@@ -83,7 +114,8 @@
           </div>
         </div>
 
-        <div class="journal-row">
+        <div class="journal-row" data-entry-id="seed-j3">
+          <button type="button" class="journal-delete text-link" data-entry-id="seed-j3" aria-label="delete this entry">remove</button>
           <div class="journal-date">Jul 22</div>
           <div class="journal-entry">
             <span class="journal-tag">matcha</span>
@@ -92,7 +124,8 @@
           </div>
         </div>
 
-        <div class="journal-row">
+        <div class="journal-row" data-entry-id="seed-j4">
+          <button type="button" class="journal-delete text-link" data-entry-id="seed-j4" aria-label="delete this entry">remove</button>
           <div class="journal-date">Jul 3</div>
           <div class="journal-entry">
             <span class="journal-tag">internship</span>
@@ -101,7 +134,8 @@
           </div>
         </div>
 
-        <div class="journal-row">
+        <div class="journal-row" data-entry-id="seed-j5">
+          <button type="button" class="journal-delete text-link" data-entry-id="seed-j5" aria-label="delete this entry">remove</button>
           <div class="journal-date">Jun 14</div>
           <div class="journal-entry">
             <span class="journal-tag">life</span>
@@ -110,7 +144,8 @@
           </div>
         </div>
 
-        <div class="journal-row">
+        <div class="journal-row" data-entry-id="seed-j6">
+          <button type="button" class="journal-delete text-link" data-entry-id="seed-j6" aria-label="delete this entry">remove</button>
           <div class="journal-date">May 29</div>
           <div class="journal-entry">
             <span class="journal-tag">new york</span>
@@ -119,7 +154,8 @@
           </div>
         </div>
 
-        <div class="journal-row">
+        <div class="journal-row" data-entry-id="seed-j7">
+          <button type="button" class="journal-delete text-link" data-entry-id="seed-j7" aria-label="delete this entry">remove</button>
           <div class="journal-date">May 2</div>
           <div class="journal-entry">
             <span class="journal-tag">notes</span>
@@ -128,7 +164,8 @@
           </div>
         </div>
 
-        <div class="journal-row">
+        <div class="journal-row" data-entry-id="seed-j8">
+          <button type="button" class="journal-delete text-link" data-entry-id="seed-j8" aria-label="delete this entry">remove</button>
           <div class="journal-date">Apr 2</div>
           <div class="journal-entry">
             <span class="journal-tag">startup</span>
