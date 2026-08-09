@@ -46,6 +46,14 @@
 
 * { box-sizing: border-box; }
 
+/* the HTML "hidden" attribute should always win, full stop. without this,
+   any element whose class sets its own "display" (buttons, flex bars,
+   forms) quietly overrides the browser's default [hidden]{display:none}
+   and stays visible even while "hidden" is set, which is exactly the bug
+   that let the admin passcode form and the travel edit form show up when
+   they should have been toggled off. */
+[hidden] { display: none !important; }
+
 html {
   scroll-behavior: smooth;
 }
@@ -1756,10 +1764,10 @@ body.admin-mode .pin-card:not(.pin-empty) .pin-delete { display: flex; }
 
 .memory-close {
   position: absolute;
-  top: -16px;
-  right: -16px;
-  width: 42px;
-  height: 42px;
+  top: var(--space-2);
+  right: var(--space-2);
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   background: var(--clay-deep);
   color: var(--cream);
@@ -1770,6 +1778,7 @@ body.admin-mode .pin-card:not(.pin-empty) .pin-delete { display: flex; }
   cursor: pointer;
   font-size: 1.3rem;
   line-height: 1;
+  z-index: 1;
 }
 
 .memory-close:hover { background: var(--matcha-deep); }
@@ -1796,6 +1805,19 @@ body.admin-mode .pin-card:not(.pin-empty) .pin-delete { display: flex; }
   box-shadow: 0 14px 26px -18px rgba(43,33,20,0.4);
   margin: 0 auto var(--space-3);
   display: block;
+}
+
+#photobooth-video {
+  width: min(260px, 100%);
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  box-shadow: 0 14px 26px -18px rgba(43,33,20,0.4);
+  margin: 0 auto var(--space-3);
+  display: block;
+  background: #2b2114;
+  transform: scaleX(-1);
 }
 
 .photobooth-actions {

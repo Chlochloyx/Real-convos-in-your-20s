@@ -265,16 +265,30 @@
 
       <div class="photobooth-stage">
         <div class="photobooth-view" id="photobooth-start-view">
-          <p class="photobooth-hint">Choose up to 3 photos from your device. Nothing gets uploaded anywhere, the strip is put together right here in your browser.</p>
-          <button class="btn" id="photobooth-upload-btn" type="button">take now or choose my photos</button>
+          <p class="photobooth-hint">Choose up to 3 photos from your device, or use your laptop's camera. Nothing gets uploaded anywhere, the strip is put together right here in your browser.</p>
+          <div class="photobooth-actions">
+            <button class="btn" id="photobooth-upload-btn" type="button">choose my photos</button>
+            <button class="btn btn-ghost" id="photobooth-camera-btn" type="button" hidden>use my camera instead</button>
+          </div>
           <p class="photobooth-hint" id="photobooth-error-text" hidden></p>
+        </div>
+
+        <div class="photobooth-view" id="photobooth-live-view" hidden>
+          <p class="photobooth-hint">Smile for up to 3 shots, then use what you've got.</p>
+          <video id="photobooth-video" autoplay playsinline muted></video>
+          <p class="photobooth-hint" id="photobooth-camera-error" hidden></p>
+          <div class="photobooth-actions">
+            <button class="btn" id="photobooth-capture-btn" type="button">capture (<span id="photobooth-shot-count">0</span>/3)</button>
+            <button class="btn btn-ghost" id="photobooth-camera-done" type="button" hidden>use these</button>
+          </div>
+          <button class="text-link" id="photobooth-camera-cancel" type="button">back</button>
         </div>
 
         <div class="photobooth-view" id="photobooth-result-view" hidden>
           <canvas id="photobooth-canvas"></canvas>
           <div class="photobooth-actions">
             <a class="btn" id="photobooth-download" download="field-notes-and-matcha-photobooth.png" target="_blank" rel="noopener">download the strip</a>
-            <button class="text-link" id="photobooth-retake" type="button">choose different photos</button>
+            <button class="text-link" id="photobooth-retake" type="button">start over</button>
           </div>
           <p class="photobooth-hint">If the download doesn't start on its own, the strip opens in a new tab, just save the image from there.</p>
         </div>

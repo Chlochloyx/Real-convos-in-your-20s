@@ -253,6 +253,11 @@
       /* ignore */
     }
     adminBars.forEach(function (bar) { bar.refresh(); });
+    // journal-form only has the "hidden" attribute set in markup; the
+    // hidden attribute always wins over CSS display now (by design), so
+    // it needs to be explicitly cleared here rather than left to the
+    // body.admin-mode CSS rule alone.
+    if (journalForm) journalForm.hidden = !on;
   }
 
   // everything here is plain in-page UI on purpose. window.prompt/alert/confirm
@@ -466,6 +471,7 @@
 
   var journalList = document.getElementById("journal-list");
   var journalForm = document.getElementById("journal-form");
+  if (journalForm) journalForm.hidden = !isAdminOn();
 
   function loadHiddenJournal() {
     try {
@@ -638,6 +644,7 @@
 
   var pbViews = {
     start: document.getElementById("photobooth-start-view"),
+    live: document.getElementById("photobooth-live-view"),
     result: document.getElementById("photobooth-result-view")
   };
   var pbUploadBtn = document.getElementById("photobooth-upload-btn");
@@ -646,6 +653,18 @@
   var pbCanvas = document.getElementById("photobooth-canvas");
   var pbDownload = document.getElementById("photobooth-download");
   var pbErrorText = document.getElementById("photobooth-error-text");
+
+  // camera path (laptop-friendly alternative to the upload button)
+  var pbCameraBtn = document.getElementById("photobooth-camera-btn");
+  var pbVideo = document.getElementById("photobooth-video");
+  var pbCaptureBtn = document.getElementById("photobooth-capture-btn");
+  var pbCameraDoneBtn = document.getElementById("photobooth-camera-done");
+  var pbCameraCancelBtn = document.getElementById("photobooth-camera-cancel");
+  var pbShotCountEl = document.getElementById("photobooth-shot-count");
+  var pbCameraErrorEl = document.getElementById("photobooth-camera-error");
+  var pbStream = null;
+  var pbShots = [];
+  var pbLastSource = "upload";
 
   function pbShowView(name) {
     Object.keys(pbViews).forEach(function (key) {
@@ -823,6 +842,22 @@
     }
   }
 
+  /* shared by both the upload path and the camera path: given a list of
+     { source, width, height, mirror } shots, draw them onto the strip */
+  function pbBuildStrip(shots) {
+    if (!pbCanvas || !shots.length) return;
+    var geo = pbGeometry(shots.length);
+    pbCanvas.width = geo.width;
+    pbCanvas.height = geo.height;
+    var ctx = pbCanvas.getContext("2d");
+    pbPaintBackground(ctx, geo);
+    for (var f = 0; f < geo.shots; f++) pbDrawFrame(ctx, geo, f);
+    shots.forEach(function (shot, idx) {
+      pbDrawCell(ctx, geo, idx, shot.source, shot.width, shot.height, !!shot.mirror);
+    });
+    pbFinishStrip(ctx, geo);
+  }
+
   /* pick up to 3 photos from the device, drop them straight onto the
      matcha-themed strip layout */
   function pbHandleFiles(fileList) {
@@ -838,14 +873,7 @@
       return;
     }
     if (pbErrorText) pbErrorText.hidden = true;
-    if (!pbCanvas) return;
-
-    var geo = pbGeometry(files.length);
-    pbCanvas.width = geo.width;
-    pbCanvas.height = geo.height;
-    var ctx = pbCanvas.getContext("2d");
-    pbPaintBackground(ctx, geo);
-    for (var f = 0; f < geo.shots; f++) pbDrawFrame(ctx, geo, f);
+    pbLastSource = "upload";
 
     var images = new Array(files.length);
     var loaded = 0;
@@ -856,16 +884,79 @@
         images[i] = img;
         loaded++;
         if (loaded === files.length) {
-          images.forEach(function (im, idx) {
-            if (im) pbDrawCell(ctx, geo, idx, im, im.naturalWidth, im.naturalHeight, false);
-          });
-          pbFinishStrip(ctx, geo);
+          pbBuildStrip(images.filter(Boolean).map(function (im) {
+            return { source: im, width: im.naturalWidth, height: im.naturalHeight, mirror: false };
+          }));
           URL.revokeObjectURL(url);
         }
       };
       img.onerror = function () { loaded++; };
       img.src = url;
     });
+  }
+
+  /* camera path: a laptop-friendly alternative to picking files. only
+     offered when the browser actually supports it over a secure origin,
+     since getUserMedia silently fails (or isn't available at all) inside
+     a sandboxed preview iframe, over plain http, or on older browsers */
+  var pbCameraSupported = !!(window.isSecureContext && navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+  if (pbCameraBtn) pbCameraBtn.hidden = !pbCameraSupported;
+
+  function pbUpdateShotCount() {
+    if (pbShotCountEl) pbShotCountEl.textContent = String(pbShots.length);
+    if (pbCameraDoneBtn) pbCameraDoneBtn.hidden = pbShots.length === 0;
+    if (pbCaptureBtn) pbCaptureBtn.disabled = pbShots.length >= 3;
+  }
+
+  function pbStopCamera() {
+    if (pbStream) {
+      pbStream.getTracks().forEach(function (t) { t.stop(); });
+      pbStream = null;
+    }
+    if (pbVideo) pbVideo.srcObject = null;
+  }
+
+  function pbStartCamera() {
+    if (!pbCameraSupported) return;
+    pbShots = [];
+    pbUpdateShotCount();
+    if (pbCameraErrorEl) pbCameraErrorEl.hidden = true;
+    pbShowView("live");
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
+      .then(function (stream) {
+        pbStream = stream;
+        if (pbVideo) {
+          pbVideo.srcObject = stream;
+          pbVideo.play().catch(function () { /* autoplay quirks, ignore */ });
+        }
+      })
+      .catch(function () {
+        pbStopCamera();
+        if (pbCameraErrorEl) {
+          pbCameraErrorEl.textContent = "Couldn't get to your camera, maybe permission was blocked. You can allow camera access and try again, or just upload photos instead.";
+          pbCameraErrorEl.hidden = false;
+        }
+      });
+  }
+
+  function pbCaptureShot() {
+    if (!pbVideo || !pbVideo.videoWidth || pbShots.length >= 3) return;
+    var shotCanvas = document.createElement("canvas");
+    shotCanvas.width = pbVideo.videoWidth;
+    shotCanvas.height = pbVideo.videoHeight;
+    shotCanvas.getContext("2d").drawImage(pbVideo, 0, 0);
+    pbShots.push(shotCanvas);
+    pbUpdateShotCount();
+    if (pbShots.length >= 3) pbFinishCamera();
+  }
+
+  function pbFinishCamera() {
+    if (!pbShots.length) return;
+    pbStopCamera();
+    pbLastSource = "camera";
+    pbBuildStrip(pbShots.map(function (canvas) {
+      return { source: canvas, width: canvas.width, height: canvas.height, mirror: true };
+    }));
   }
 
   if (photoboothBtn && photoboothModal) {
@@ -878,6 +969,7 @@
 
   if (photoboothModal) {
     var closePhotobooth = function () {
+      pbStopCamera();
       photoboothModal.classList.remove("open");
     };
     if (photoboothClose) photoboothClose.addEventListener("click", closePhotobooth);
@@ -891,9 +983,20 @@
 
   var pbTriggerUpload = function () { if (pbFileInput) pbFileInput.click(); };
   if (pbUploadBtn) pbUploadBtn.addEventListener("click", pbTriggerUpload);
-  if (pbRetakeBtn) pbRetakeBtn.addEventListener("click", function () {
+  if (pbCameraBtn) pbCameraBtn.addEventListener("click", pbStartCamera);
+  if (pbCaptureBtn) pbCaptureBtn.addEventListener("click", pbCaptureShot);
+  if (pbCameraDoneBtn) pbCameraDoneBtn.addEventListener("click", pbFinishCamera);
+  if (pbCameraCancelBtn) pbCameraCancelBtn.addEventListener("click", function () {
+    pbStopCamera();
     pbShowView("start");
-    pbTriggerUpload();
+  });
+  if (pbRetakeBtn) pbRetakeBtn.addEventListener("click", function () {
+    if (pbLastSource === "camera" && pbCameraSupported) {
+      pbStartCamera();
+    } else {
+      pbShowView("start");
+      pbTriggerUpload();
+    }
   });
   if (pbFileInput) {
     pbFileInput.addEventListener("change", function (e) {
