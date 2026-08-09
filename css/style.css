@@ -789,6 +789,7 @@ body.admin-mode .admin-add-form { display: flex; }
 
 .journal-entry h3 { font-size: 1.3rem; margin-bottom: 0.4rem; }
 .journal-entry p { color: var(--ink-soft); margin: 0; max-width: 62ch; }
+.journal-entry p + p { margin-top: 0.9em; }
 
 .journal-tag {
   display: inline-block;
