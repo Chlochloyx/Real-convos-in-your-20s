@@ -572,6 +572,45 @@ h1, h2, h3 {
   color: var(--ink-soft);
 }
 
+/* mix-ins start invisible; a picker button toggles the matching one on */
+.mixin-layer { display: none; }
+.mixin-layer.on { display: block; }
+
+.mixin-picker {
+  display: flex;
+  justify-content: center;
+  gap: 0.5em;
+  margin-top: var(--space-2);
+}
+
+.mixin-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  background: var(--paper);
+  font-size: 1.1rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.mixin-btn:hover { transform: translateY(-2px); }
+.mixin-btn:focus-visible { outline: 2px solid var(--clay-deep); outline-offset: 2px; }
+.mixin-btn[aria-pressed="true"] { border-color: var(--matcha-deep); background: var(--matcha-pale); }
+
+.mixin-summary {
+  display: block;
+  text-align: center;
+  margin-top: 0.5em;
+  font-family: var(--font-vintage);
+  font-size: 0.75rem;
+  color: var(--clay-deep);
+}
+
 .foam-swirl {
   transform-box: fill-box;
   transform-origin: center;

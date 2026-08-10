@@ -92,6 +92,22 @@
 
           <g transform="translate(150 140) scale(1 0.27)" clip-path="url(#matchaClip)">
             <path class="foam-swirl" id="foam-swirl" d="M0 -58C46 -58 79 -25 79 13C79 46 52 67 14 65C-19 63 -40 38 -37 11C-33 -12 -12 -23 12 -13C30 -6 30 14 8 17" stroke="var(--cream)" stroke-width="9" fill="none" stroke-linecap="round" opacity="0.9"/>
+
+            <!-- mix-ins float in the same flattened/clipped surface as the foam swirl -->
+            <g id="mixin-ice" class="mixin-layer">
+              <rect x="-58" y="-38" width="30" height="30" rx="6" fill="rgba(255,255,255,0.55)" stroke="rgba(255,255,255,0.9)" stroke-width="2.5"/>
+              <rect x="16" y="18" width="26" height="26" rx="6" fill="rgba(255,255,255,0.5)" stroke="rgba(255,255,255,0.85)" stroke-width="2.5"/>
+              <rect x="-20" y="6" width="24" height="24" rx="6" fill="rgba(255,255,255,0.5)" stroke="rgba(255,255,255,0.85)" stroke-width="2.5"/>
+            </g>
+            <g id="mixin-boba" class="mixin-layer">
+              <circle cx="-48" cy="38" r="7" fill="#3D2B1F"/>
+              <circle cx="-28" cy="48" r="7" fill="#3D2B1F"/>
+              <circle cx="-4" cy="52" r="7" fill="#3D2B1F"/>
+              <circle cx="20" cy="46" r="7" fill="#3D2B1F"/>
+              <circle cx="42" cy="34" r="7" fill="#3D2B1F"/>
+              <circle cx="4" cy="38" r="7" fill="#3D2B1F"/>
+            </g>
+            <path id="mixin-honey" class="mixin-layer" d="M-58 -8C-38 12 -18 -18 2 2C22 22 42 -12 62 8" stroke="var(--clay-deep)" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.9"/>
           </g>
 
           <path d="M248 62L202 126" stroke="#B98F55" stroke-width="5" stroke-linecap="round" fill="none"/>
@@ -103,9 +119,28 @@
             <path d="M202 126L211 142"/>
             <path d="M202 126L216 136"/>
           </g>
+
+          <!-- strawberry sits perched on the rim, drawn at normal proportions
+               (not squashed into the flattened surface group like the rest) -->
+          <g id="mixin-strawberry" class="mixin-layer" transform="translate(96 122) rotate(-12)">
+            <path d="M-16 -2C-16 10 -8 20 0 20C8 20 16 10 16 -2C16 -10 8 -16 0 -16C-8 -16 -16 -10 -16 -2Z" fill="var(--clay)" stroke="var(--clay-deep)" stroke-width="2"/>
+            <circle cx="-7" cy="0" r="1.4" fill="var(--cream)"/>
+            <circle cx="6" cy="-2" r="1.4" fill="var(--cream)"/>
+            <circle cx="0" cy="8" r="1.4" fill="var(--cream)"/>
+            <circle cx="-9" cy="9" r="1.4" fill="var(--cream)"/>
+            <circle cx="8" cy="7" r="1.4" fill="var(--cream)"/>
+            <path d="M-8 -15C-6 -20 6 -20 8 -15" stroke="var(--matcha-deep)" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+          </g>
         </svg>
         </button>
         <span class="stir-hint">tap to stir</span>
+        <div class="mixin-picker" role="group" aria-label="add something to the matcha">
+          <button type="button" class="mixin-btn" data-mixin="ice" aria-pressed="false" aria-label="add ice">🧊</button>
+          <button type="button" class="mixin-btn" data-mixin="strawberry" aria-pressed="false" aria-label="add strawberry">🍓</button>
+          <button type="button" class="mixin-btn" data-mixin="boba" aria-pressed="false" aria-label="add boba">🧋</button>
+          <button type="button" class="mixin-btn" data-mixin="honey" aria-pressed="false" aria-label="add honey">🍯</button>
+        </div>
+        <span class="mixin-summary" id="mixin-summary" hidden></span>
         </div>
         <div class="hero-doodle doodle-camera" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="13.5" r="3.4" stroke="currentColor" stroke-width="1.6"/></svg>

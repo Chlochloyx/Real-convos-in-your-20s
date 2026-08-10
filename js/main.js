@@ -1287,6 +1287,42 @@
   }
 
   /* -------------------------------------------------------------
+     hero bowl: add-ins. purely cosmetic toggles, nothing saved,
+     just something to fiddle with while the tab loads
+     ------------------------------------------------------------- */
+
+  var mixinLabels = { ice: "ice", strawberry: "strawberry", boba: "boba", honey: "honey" };
+  var mixinButtons = document.querySelectorAll(".mixin-btn[data-mixin]");
+  var mixinSummary = document.getElementById("mixin-summary");
+
+  function updateMixinSummary() {
+    if (!mixinSummary) return;
+    var active = Array.prototype.filter.call(mixinButtons, function (btn) {
+      return btn.getAttribute("aria-pressed") === "true";
+    }).map(function (btn) {
+      return mixinLabels[btn.getAttribute("data-mixin")];
+    });
+    if (active.length) {
+      mixinSummary.textContent = "with " + active.join(", ");
+      mixinSummary.hidden = false;
+    } else {
+      mixinSummary.textContent = "";
+      mixinSummary.hidden = true;
+    }
+  }
+
+  mixinButtons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var name = btn.getAttribute("data-mixin");
+      var layer = document.getElementById("mixin-" + name);
+      var on = btn.getAttribute("aria-pressed") !== "true";
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+      if (layer) layer.classList.toggle("on", on);
+      updateMixinSummary();
+    });
+  });
+
+  /* -------------------------------------------------------------
      the corner nook: little clickable pets, each with their own
      rotating pool of lines (mostly affirmations, one gives tips)
      ------------------------------------------------------------- */
