@@ -368,6 +368,16 @@ h1, h2, h3 {
   font-family: var(--font-display);
 }
 
+/* on mobile the footer collapses to one narrow column, so the centered
+   doodle icons above and the left-aligned text below start looking
+   mismatched. center the whole footer at that point instead. */
+@media (max-width: 620px) {
+  .footer-grid { flex-direction: column; align-items: center; text-align: center; }
+  .footer-status { max-width: 32ch; }
+  .footer-links { justify-content: center; flex-wrap: wrap; }
+  .footer-fine { text-align: center; }
+}
+
 /* ==========================================================================
    buttons / links
    ========================================================================== */
