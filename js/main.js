@@ -91,6 +91,10 @@
     pressure: "🐹 family pressure",
     career: "📔 career pressure",
     deep: "💭 late-night thoughts",
+    money: "💸 money stress",
+    relationships: "💔 relationships",
+    burnout: "😴 burnout",
+    adulting: "🏠 adulting",
     random: "🍵 random"
   };
 
