@@ -572,9 +572,21 @@ h1, h2, h3 {
   color: var(--ink-soft);
 }
 
-/* mix-ins start invisible; a picker button toggles the matching one on */
+/* mix-ins start invisible; a picker button toggles the matching one on.
+   stirring blends whatever's currently in there into the matcha, so it
+   fades out rather than sitting there forever. */
 .mixin-layer { display: none; }
 .mixin-layer.on { display: block; }
+.mixin-layer.blending { animation: mixin-blend 0.7s ease forwards; }
+
+@keyframes mixin-blend {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mixin-layer.blending { animation-duration: 0.001ms; }
+}
 
 .mixin-picker {
   display: flex;

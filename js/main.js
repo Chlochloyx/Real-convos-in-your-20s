@@ -1280,6 +1280,7 @@
       foamSwirl.classList.remove("stirring");
       void foamSwirl.getBBox(); // restart the animation even on rapid repeat clicks
       foamSwirl.classList.add("stirring");
+      blendMixinsIn();
     });
     foamSwirl.addEventListener("animationend", function () {
       foamSwirl.classList.remove("stirring");
@@ -1317,10 +1318,33 @@
       var layer = document.getElementById("mixin-" + name);
       var on = btn.getAttribute("aria-pressed") !== "true";
       btn.setAttribute("aria-pressed", on ? "true" : "false");
-      if (layer) layer.classList.toggle("on", on);
+      if (layer) {
+        layer.classList.remove("blending");
+        layer.classList.toggle("on", on);
+      }
       updateMixinSummary();
     });
   });
+
+  // stirring mixes in whatever's currently added: it fades out instead of
+  // sitting on the surface forever, and the picker resets so you can add
+  // something fresh
+  function blendMixinsIn() {
+    var blended = false;
+    mixinButtons.forEach(function (btn) {
+      if (btn.getAttribute("aria-pressed") !== "true") return;
+      blended = true;
+      btn.setAttribute("aria-pressed", "false");
+      var layer = document.getElementById("mixin-" + btn.getAttribute("data-mixin"));
+      if (!layer) return;
+      layer.classList.add("blending");
+      layer.addEventListener("animationend", function onDone() {
+        layer.classList.remove("on", "blending");
+        layer.removeEventListener("animationend", onDone);
+      });
+    });
+    if (blended) updateMixinSummary();
+  }
 
   /* -------------------------------------------------------------
      the corner nook: little clickable pets, each with their own
