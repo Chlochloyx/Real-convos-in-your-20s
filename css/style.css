@@ -58,6 +58,12 @@ html {
   scroll-behavior: smooth;
 }
 
+/* so an in-page anchor jump (like "Read the wall") doesn't land with
+   its target tucked up under the fixed nav bar */
+[id] {
+  scroll-margin-top: 96px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
@@ -70,6 +76,9 @@ html {
 
 body {
   margin: 0;
+  /* .site-nav is now position: fixed (see below), which takes it out of
+     normal flow, so this makes up the space it used to occupy there */
+  padding-top: 76px;
   background: var(--cream);
   color: var(--ink);
   font-family: var(--font-body);
@@ -165,17 +174,19 @@ h1, h2, h3 {
    ========================================================================== */
 
 .site-nav {
-  position: sticky;
+  /* position: sticky here had a real, unfixable-in-place iOS Safari bug:
+     during the elastic bounce past the top of the page, it can visually
+     detach and let page content show through it. position: fixed doesn't
+     have that recalculation at all, so it's the reliable option. body
+     gets matching padding-top below to make up the space it no longer
+     occupies in normal flow. */
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 40;
   background: var(--cream);
   border-bottom: 1px solid var(--line);
-  /* iOS Safari can let a sticky header visually detach and show page
-     content through it during the elastic bounce when you scroll past
-     the top. Promoting it to its own GPU layer stops that glitch. */
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  will-change: transform;
 }
 
 .site-nav .wrap {
