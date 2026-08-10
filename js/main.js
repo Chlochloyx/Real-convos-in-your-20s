@@ -1284,7 +1284,7 @@
     ],
     cream: [
       "the wall's only a few weeks old and it already has a hot one.",
-      "someone messaged after reading the Vietnam entry. that's why this page exists.",
+      "there's no wrong way to use this page, read, write, or just lurk.",
       "no five-year plan here either, for what it's worth."
     ]
   };
