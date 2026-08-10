@@ -170,6 +170,12 @@ h1, h2, h3 {
   z-index: 40;
   background: var(--cream);
   border-bottom: 1px solid var(--line);
+  /* iOS Safari can let a sticky header visually detach and show page
+     content through it during the elastic bounce when you scroll past
+     the top. Promoting it to its own GPU layer stops that glitch. */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .site-nav .wrap {
@@ -1323,14 +1329,12 @@ body.admin-mode .admin-add-form { display: flex; }
    ========================================================================== */
 
 .notebook {
+  /* used to draw fixed-pitch ruled lines here, but that only lined up
+     with the old short entries. entries are longer and variable-height
+     now (multi-paragraph), so a fixed pitch drifts and cuts straight
+     through the middle of text. each .journal-row already draws its
+     own top border to separate entries, so that's the only divider now. */
   position: relative;
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent,
-    transparent 61px,
-    var(--line) 62px
-  );
-  background-position: 0 8px;
 }
 
 .notebook::before {
