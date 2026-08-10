@@ -79,6 +79,17 @@
             <clipPath id="matchaClip">
               <circle cx="0" cy="0" r="76"/>
             </clipPath>
+            <radialGradient id="meltHalo" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#F2F4DC" stop-opacity="0.75"/>
+              <stop offset="100%" stop-color="#F2F4DC" stop-opacity="0"/>
+            </radialGradient>
+            <filter id="iceBlur" x="-60%" y="-60%" width="220%" height="220%">
+              <feGaussianBlur stdDeviation="1.6"/>
+            </filter>
+            <linearGradient id="honeyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#F3C15F"/>
+              <stop offset="100%" stop-color="#B8730F"/>
+            </linearGradient>
           </defs>
 
           <path class="steam s1" d="M100 128C90 108 108 98 100 78C92 58 108 48 102 28" stroke="var(--cream)" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.6"/>
@@ -94,10 +105,16 @@
             <path class="foam-swirl" id="foam-swirl" d="M0 -58C46 -58 79 -25 79 13C79 46 52 67 14 65C-19 63 -40 38 -37 11C-33 -12 -12 -23 12 -13C30 -6 30 14 8 17" stroke="var(--cream)" stroke-width="9" fill="none" stroke-linecap="round" opacity="0.9"/>
 
             <!-- mix-ins float in the same flattened/clipped surface as the foam swirl -->
+            <!-- ice reads as melting into the matcha rather than sitting on
+                 top: a soft pale halo (the diluted patch) under a low-opacity,
+                 blurred, translucent chunk, no hard white edges -->
             <g id="mixin-ice" class="mixin-layer">
-              <rect x="-58" y="-38" width="30" height="30" rx="6" fill="rgba(255,255,255,0.55)" stroke="rgba(255,255,255,0.9)" stroke-width="2.5"/>
-              <rect x="16" y="18" width="26" height="26" rx="6" fill="rgba(255,255,255,0.5)" stroke="rgba(255,255,255,0.85)" stroke-width="2.5"/>
-              <rect x="-20" y="6" width="24" height="24" rx="6" fill="rgba(255,255,255,0.5)" stroke="rgba(255,255,255,0.85)" stroke-width="2.5"/>
+              <ellipse cx="-42" cy="-22" rx="22" ry="16" fill="url(#meltHalo)"/>
+              <ellipse cx="-42" cy="-22" rx="13" ry="9" fill="#FFFFFF" opacity="0.45" filter="url(#iceBlur)"/>
+              <ellipse cx="24" cy="26" rx="20" ry="15" fill="url(#meltHalo)"/>
+              <ellipse cx="24" cy="26" rx="12" ry="8" fill="#FFFFFF" opacity="0.4" filter="url(#iceBlur)"/>
+              <ellipse cx="-14" cy="16" rx="18" ry="14" fill="url(#meltHalo)"/>
+              <ellipse cx="-14" cy="16" rx="10" ry="7" fill="#FFFFFF" opacity="0.4" filter="url(#iceBlur)"/>
             </g>
             <g id="mixin-boba" class="mixin-layer">
               <circle cx="-48" cy="38" r="7" fill="#3D2B1F"/>
@@ -107,7 +124,15 @@
               <circle cx="42" cy="34" r="7" fill="#3D2B1F"/>
               <circle cx="4" cy="38" r="7" fill="#3D2B1F"/>
             </g>
-            <path id="mixin-honey" class="mixin-layer" d="M-58 -8C-38 12 -18 -18 2 2C22 22 42 -12 62 8" stroke="var(--clay-deep)" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.9"/>
+            <!-- honey drizzle: a thick gradient ribbon (the syrup body) with a
+                 thin bright streak down the middle for a glossy look, plus
+                 small pooled drops at each end where it "landed" -->
+            <g id="mixin-honey" class="mixin-layer">
+              <circle cx="-58" cy="-8" r="6" fill="url(#honeyGrad)" opacity="0.95"/>
+              <path d="M-58 -8C-38 12 -18 -18 2 2C22 22 42 -12 62 8" stroke="url(#honeyGrad)" stroke-width="9" fill="none" stroke-linecap="round" opacity="0.95"/>
+              <path d="M-58 -8C-38 12 -18 -18 2 2C22 22 42 -12 62 8" stroke="#FDE7B0" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+              <circle cx="62" cy="8" r="6" fill="url(#honeyGrad)" opacity="0.95"/>
+            </g>
           </g>
 
           <path d="M248 62L202 126" stroke="#B98F55" stroke-width="5" stroke-linecap="round" fill="none"/>
