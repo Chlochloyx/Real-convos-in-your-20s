@@ -694,6 +694,19 @@ h1, h2, h3 {
   gap: var(--space-3);
 }
 
+/* contact page: two columns (the reach-me list + the small note card)
+   with its own breakpoint, so it can't get stuck at two columns on a
+   phone the way a plain inline style did before */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+  gap: var(--space-3);
+}
+@media (max-width: 620px) {
+  .contact-grid { grid-template-columns: 1fr; }
+}
+
 .story-card {
   background: var(--paper);
   border: 1px solid var(--line);
