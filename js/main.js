@@ -1168,10 +1168,10 @@
 
   var placeDetails = {
     vietnam: {
-      eyebrow: "NOC · Ho Chi Minh City",
+      eyebrow: "Skilio · Ho Chi Minh City",
       title: "Vietnam",
-      short: "A few months in Ho Chi Minh City on NOC, handling logistics for an 80-student exchange trip: flights, homestays, and a lot of last-minute rebooking.",
-      body: "I think it's fair to say this was my first time overseas for that long. And yeah, I was scared. Of course I was.\n\nNOC sent me to Ho Chi Minh City to help run a group of eighty students on exchange. It was a lot of partnership work, planning, and execution, facilitating the company visit partnerships was the big one. On top of that came the logistics side too: an endless spreadsheet, chasing people down for passport details, and rebooking flights and homestays last minute whenever plans changed without warning."
+      short: "A stint in Ho Chi Minh City with a small startup called Skilio, building the partnerships that brought over 80 Singaporean students out to see Vietnam's business landscape and startup scene firsthand.",
+      body: "I think it's fair to say this was my first time overseas for that long. And yeah, I was scared. Of course I was.\n\nI was interning at a small startup called Skilio, and most of the actual work was partnerships, not paperwork. I helped build relationships with over 30 universities and corporate partners across Vietnam, all so we could bring Singaporean students out to see the business landscape and startup ecosystem there firsthand instead of just hearing about it secondhand. We ran four immersion trips back to back, over 80 students altogether, and somewhere in the middle of coordinating all of that I stopped feeling like the newest, most nervous person in the room."
     },
     newyork: {
       eyebrow: "NOC · New York City",
