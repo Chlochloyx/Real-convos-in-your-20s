@@ -75,11 +75,10 @@
   }
 
   /* -------------------------------------------------------------
-     the shared roll: pin-it form, saved locally on this device
-     (no backend here — this is a client-only preview of the feature)
+     the shared roll: pin-it form, backed by a real shared server (see
+     api/pins.js) so every visitor's pins show up for everyone else too
      ------------------------------------------------------------- */
 
-  var STORAGE_KEY = "fnm-shared-stories";
   // these need to exist before any pin renders (including stored pins
   // re-rendered on load below), since rendering wires up each pin's
   // reply count against them
@@ -116,21 +115,31 @@
     random: "🍵 random"
   };
 
-  function loadStoredPins() {
-    try {
-      var raw = window.localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : [];
-    } catch (e) {
-      return [];
-    }
+  // the shared wall itself lives on a real server now (see api/pins.js),
+  // so every visitor sees the same pins instead of each browser having
+  // its own copy. these three just wrap that API.
+  function fetchSharedPins() {
+    return fetch("/api/pins")
+      .then(function (res) { return res.json(); })
+      .then(function (data) { return (data && data.pins) || []; })
+      .catch(function () { return null; }); // null = couldn't load, not "empty"
   }
 
-  function saveStoredPins(list) {
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-    } catch (e) {
-      /* storage unavailable (private mode, etc.) — pin still renders this session */
-    }
+  function postSharedPin(entry) {
+    return fetch("/api/pins", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(entry)
+    }).then(function (res) {
+      if (!res.ok) throw new Error("post failed");
+      return res.json();
+    }).then(function (data) { return data.pin; });
+  }
+
+  function deleteSharedPin(id) {
+    return fetch("/api/pins?id=" + encodeURIComponent(id) + "&passcode=" + encodeURIComponent(ADMIN_PASSCODE), {
+      method: "DELETE"
+    }).then(function (res) { return res.ok; }).catch(function () { return false; });
   }
 
   var petIcons = {
@@ -235,7 +244,14 @@
   }
 
   if (pinGrid) {
-    loadStoredPins().forEach(function (entry) { renderPin(entry, false); });
+    fetchSharedPins().then(function (pins) {
+      if (pins === null) {
+        if (pinToast) pinToast.textContent = "couldn't load the wall right now, try refreshing in a bit";
+        return;
+      }
+      // oldest first, so newest ends up at the bottom next to the "+ yours" card
+      pins.slice().reverse().forEach(function (entry) { renderPin(entry, false); });
+    });
   }
 
   /* -------------------------------------------------------------
@@ -422,16 +438,38 @@
         return;
       }
 
-      if (pinId.indexOf("seed-") === 0) {
-        hideSeedPin(pinId);
-      } else {
-        var stored = loadStoredPins().filter(function (entry) { return entry.id !== pinId; });
-        saveStoredPins(stored);
-      }
-      removeThreadFor(pinId);
       var card = btn.closest(".pin-card");
-      if (card) card.remove();
-      refreshReplyCounts();
+
+      if (pinId.indexOf("seed-") === 0) {
+        // seed pins are baked into the HTML on every visitor's page, not
+        // in the shared database, so hiding one is still just local to
+        // this device
+        hideSeedPin(pinId);
+        removeThreadFor(pinId);
+        if (card) card.remove();
+        refreshReplyCounts();
+      } else {
+        // real pins live on the server now, so removing one has to go
+        // through it too, otherwise it'd just come right back for
+        // everyone (including this device) on the next reload
+        btn.disabled = true;
+        deleteSharedPin(pinId).then(function (ok) {
+          if (!ok) {
+            btn.disabled = false;
+            btn.classList.remove("confirming");
+            btn.innerHTML = "&times;";
+            btn.setAttribute("aria-label", "delete this pin");
+            if (pinToast) {
+              pinToast.textContent = "couldn't delete that, try again in a moment";
+              setTimeout(function () { pinToast.textContent = ""; }, 4000);
+            }
+            return;
+          }
+          removeThreadFor(pinId);
+          if (card) card.remove();
+          refreshReplyCounts();
+        });
+      }
     });
   }
 
@@ -444,32 +482,39 @@
       var text = textEl ? textEl.value.trim() : "";
       if (!text) return;
 
-      var entry = {
-        id: "user-" + Date.now() + "-" + Math.floor(Math.random() * 1000),
+      var submitBtn = pinForm.querySelector("button[type='submit']");
+      if (submitBtn) submitBtn.disabled = true;
+
+      var draft = {
         topic: topicEl ? topicEl.value : "random",
         text: text,
         sign: signEl ? signEl.value.trim() : "",
         pet: pinPetInput ? pinPetInput.value : "matcha"
       };
 
-      var stored = loadStoredPins();
-      stored.push(entry);
-      saveStoredPins(stored);
-      renderPin(entry, true);
-      pinForm.reset();
-      if (petPicker && pinPetInput) {
-        pinPetInput.value = "matcha";
-        petPicker.querySelectorAll(".pet-choice").forEach(function (c) {
-          var isMatcha = c.getAttribute("data-pet") === "matcha";
-          c.classList.toggle("selected", isMatcha);
-          c.setAttribute("aria-pressed", isMatcha ? "true" : "false");
-        });
-      }
-
-      if (pinToast) {
-        pinToast.textContent = "pinned it up, saved on this device for now 🫂";
-        setTimeout(function () { pinToast.textContent = ""; }, 4000);
-      }
+      postSharedPin(draft).then(function (entry) {
+        renderPin(entry, true);
+        pinForm.reset();
+        if (petPicker && pinPetInput) {
+          pinPetInput.value = "matcha";
+          petPicker.querySelectorAll(".pet-choice").forEach(function (c) {
+            var isMatcha = c.getAttribute("data-pet") === "matcha";
+            c.classList.toggle("selected", isMatcha);
+            c.setAttribute("aria-pressed", isMatcha ? "true" : "false");
+          });
+        }
+        if (pinToast) {
+          pinToast.textContent = "pinned it up, everyone can see it 🫂";
+          setTimeout(function () { pinToast.textContent = ""; }, 4000);
+        }
+      }).catch(function () {
+        if (pinToast) {
+          pinToast.textContent = "couldn't post that right now, try again in a moment";
+          setTimeout(function () { pinToast.textContent = ""; }, 5000);
+        }
+      }).finally(function () {
+        if (submitBtn) submitBtn.disabled = false;
+      });
     });
   }
 
