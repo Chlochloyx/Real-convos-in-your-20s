@@ -1102,7 +1102,7 @@
       eyebrow: "NOC · Ho Chi Minh City",
       title: "Vietnam",
       short: "A few months in Ho Chi Minh City on NOC, handling logistics for an 80-student exchange trip: flights, homestays, and a lot of last-minute rebooking.",
-      body: "NOC sent me to Ho Chi Minh City to help run logistics for a group of eighty students on exchange. In practice that meant an endless spreadsheet, chasing people for passport details, and rebooking flights and homestays last minute whenever plans changed without warning.\n\nOutside of the actual work, I hadn't lived away from home that long before, so a lot of the adjustment was just the logistics of daily life: figuring out a new city on my own, ordering food in broken Vietnamese, getting used to eating alone."
+      body: "NOC sent me to Ho Chi Minh City to help run logistics for a group of eighty students on exchange. In practice that meant an endless spreadsheet, chasing people for passport details, and rebooking flights and homestays last minute whenever plans changed without warning.\n\nOutside of the actual work, I hadn't lived away from home that long before, so a lot of the adjustment was just the logistics of daily life: figuring out a new city on my own, ordering food in broken Vietnamese."
     },
     newyork: {
       eyebrow: "NOC · New York City",
