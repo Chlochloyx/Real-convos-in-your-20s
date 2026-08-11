@@ -845,6 +845,18 @@ h1, h2, h3 {
   border-top: 1px solid var(--line);
 }
 
+/* the home page preview rows are real links into the full journal entry
+   (see journal.html), so they need to not look/behave like a wall of
+   underlined blue text while still reading as clickable */
+a.journal-row {
+  text-decoration: none;
+  color: inherit;
+  transition: opacity 0.15s ease;
+}
+
+a.journal-row:hover { opacity: 0.75; }
+a.journal-row:hover .journal-entry h3 { color: var(--clay-deep); }
+
 .journal-delete {
   display: none;
   position: absolute;
