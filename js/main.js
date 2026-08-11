@@ -721,6 +721,7 @@
   var pbFileInput = document.getElementById("photobooth-file-input");
   var pbCanvas = document.getElementById("photobooth-canvas");
   var pbDownload = document.getElementById("photobooth-download");
+  var pbDownloadHint = document.getElementById("photobooth-download-hint");
   var pbErrorText = document.getElementById("photobooth-error-text");
 
   // camera path (laptop-friendly alternative to the upload button)
@@ -883,6 +884,50 @@
   }
 
   var pbDownloadUrl = null;
+  // set once a strip is ready, only on browsers that can actually hand a
+  // file to the native share sheet (see pbSetupDownload below)
+  var pbShareFile = null;
+
+  // most phone browsers (iOS Safari especially) just ignore the anchor
+  // "download" attribute on a blob: URL and open the image in a new tab
+  // instead of saving it, so there's no reliable one-tap "save to my
+  // gallery" through a plain link there. the actual fix is the native
+  // share sheet, since "save image"/"save to photos" is a built-in option
+  // there. desktop browsers don't need this, the plain download already
+  // works fine, so this only switches the button over when sharing files
+  // is actually supported.
+  function pbSetupDownload(blob) {
+    if (!pbDownload) return;
+    if (pbDownloadUrl) URL.revokeObjectURL(pbDownloadUrl);
+    pbDownloadUrl = URL.createObjectURL(blob);
+    pbDownload.href = pbDownloadUrl;
+
+    var file = null;
+    try {
+      file = new File([blob], "field-notes-and-matcha-photobooth.png", { type: "image/png" });
+    } catch (e) {
+      file = null;
+    }
+    var canShareFile = !!(file && navigator.canShare && navigator.canShare({ files: [file] }));
+    pbShareFile = canShareFile ? file : null;
+    pbDownload.textContent = canShareFile ? "save to photos" : "download the strip";
+    if (pbDownloadHint) {
+      pbDownloadHint.textContent = canShareFile
+        ? "Tap “save to photos”, then choose Save Image from the share sheet."
+        : "If the download doesn't start on its own, the strip opens in a new tab, just save the image from there.";
+    }
+  }
+
+  if (pbDownload) {
+    pbDownload.addEventListener("click", function (e) {
+      if (!pbShareFile) return; // no share support here, let the normal download link happen
+      e.preventDefault();
+      navigator.share({ files: [pbShareFile], title: "field notes & matcha" }).catch(function () {
+        // user backed out of the share sheet, or it failed silently, either
+        // way there's nothing useful to show them for that
+      });
+    });
+  }
 
   function pbFinishStrip(ctx, geo) {
     var capY = geo.topMargin + geo.cellSize * geo.shots + geo.gap * (geo.shots - 1) + geo.captionHeight / 2;
@@ -902,9 +947,7 @@
     if (pbCanvas.toBlob) {
       pbCanvas.toBlob(function (blob) {
         if (!blob || !pbDownload) return;
-        if (pbDownloadUrl) URL.revokeObjectURL(pbDownloadUrl);
-        pbDownloadUrl = URL.createObjectURL(blob);
-        pbDownload.href = pbDownloadUrl;
+        pbSetupDownload(blob);
       }, "image/png");
     } else if (pbDownload) {
       pbDownload.href = pbCanvas.toDataURL("image/png");
