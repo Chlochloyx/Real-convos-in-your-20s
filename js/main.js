@@ -723,6 +723,7 @@
   var pbDownload = document.getElementById("photobooth-download");
   var pbDownloadHint = document.getElementById("photobooth-download-hint");
   var pbErrorText = document.getElementById("photobooth-error-text");
+  var pbThemePicker = document.getElementById("pb-theme-picker");
 
   // camera path (laptop-friendly alternative to the upload button)
   var pbCameraBtn = document.getElementById("photobooth-camera-btn");
@@ -735,6 +736,17 @@
   var pbStream = null;
   var pbShots = [];
   var pbLastSource = "upload";
+
+  // three strip colorways someone can switch between once the strip's
+  // already made, reusing the same green/orange accents as the rest of
+  // the site plus a plainer cream one for a more classic photobooth look
+  var PB_THEMES = {
+    matcha: { bgTop: "#F2F4DC", bgBottom: "#FBF3E3", frameFill: "#FFF8E9", frameStroke: "#557123" },
+    clay: { bgTop: "#FBE2C8", bgBottom: "#FFF3E3", frameFill: "#FFF8E9", frameStroke: "#B85A28" },
+    cream: { bgTop: "#FFF8E9", bgBottom: "#FFEFD3", frameFill: "#FFFFFF", frameStroke: "#2B2114" }
+  };
+  var pbTheme = "matcha";
+  var pbLastShots = null;
 
   function pbShowView(name) {
     Object.keys(pbViews).forEach(function (key) {
@@ -821,16 +833,17 @@
   }
 
   function pbPaintBackground(ctx, geo) {
+    var theme = PB_THEMES[pbTheme] || PB_THEMES.matcha;
     var grad = ctx.createLinearGradient(0, 0, 0, geo.height);
-    grad.addColorStop(0, "#F2F4DC");
-    grad.addColorStop(1, "#FBF3E3");
+    grad.addColorStop(0, theme.bgTop);
+    grad.addColorStop(1, theme.bgBottom);
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, geo.width, geo.height);
 
     // little matcha bowl doodle up top, so it reads as "field notes & matcha" before you even hit the caption
     ctx.save();
     ctx.translate(geo.width / 2, geo.topMargin / 2 + 2);
-    ctx.strokeStyle = "#557123";
+    ctx.strokeStyle = theme.frameStroke;
     ctx.lineWidth = 2;
     ctx.lineCap = "round";
     ctx.beginPath();
@@ -849,11 +862,12 @@
   }
 
   function pbDrawFrame(ctx, geo, index) {
+    var theme = PB_THEMES[pbTheme] || PB_THEMES.matcha;
     var y = geo.topMargin + index * (geo.cellSize + geo.gap);
     var pad = 6;
     ctx.save();
-    ctx.fillStyle = "#FFF8E9";
-    ctx.strokeStyle = "#557123";
+    ctx.fillStyle = theme.frameFill;
+    ctx.strokeStyle = theme.frameStroke;
     ctx.lineWidth = 2;
     if (ctx.roundRect) {
       ctx.beginPath();
@@ -958,6 +972,7 @@
      { source, width, height, mirror } shots, draw them onto the strip */
   function pbBuildStrip(shots) {
     if (!pbCanvas || !shots.length) return;
+    pbLastShots = shots; // kept around so switching the color theme can redraw without retaking anything
     var geo = pbGeometry(shots.length);
     pbCanvas.width = geo.width;
     pbCanvas.height = geo.height;
@@ -968,6 +983,20 @@
       pbDrawCell(ctx, geo, idx, shot.source, shot.width, shot.height, !!shot.mirror);
     });
     pbFinishStrip(ctx, geo);
+  }
+
+  if (pbThemePicker) {
+    pbThemePicker.addEventListener("click", function (e) {
+      var btn = e.target.closest(".pb-theme-btn");
+      if (!btn || !pbLastShots) return;
+      var theme = btn.getAttribute("data-theme");
+      if (!PB_THEMES[theme] || theme === pbTheme) return;
+      pbTheme = theme;
+      pbThemePicker.querySelectorAll(".pb-theme-btn").forEach(function (b) {
+        b.setAttribute("aria-pressed", b === btn ? "true" : "false");
+      });
+      pbBuildStrip(pbLastShots);
+    });
   }
 
   /* pick up to 3 photos from the device, drop them straight onto the
@@ -1103,6 +1132,14 @@
     pbShowView("start");
   });
   if (pbRetakeBtn) pbRetakeBtn.addEventListener("click", function () {
+    // starting fresh, so the color picker shouldn't carry over from the last strip
+    pbTheme = "matcha";
+    pbLastShots = null;
+    if (pbThemePicker) {
+      pbThemePicker.querySelectorAll(".pb-theme-btn").forEach(function (b) {
+        b.setAttribute("aria-pressed", b.getAttribute("data-theme") === "matcha" ? "true" : "false");
+      });
+    }
     if (pbLastSource === "camera" && pbCameraSupported) {
       pbStartCamera();
     } else {

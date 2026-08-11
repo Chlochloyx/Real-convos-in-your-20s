@@ -1971,6 +1971,44 @@ body.admin-mode .pin-card:not(.pin-empty) .pin-delete { display: flex; }
   flex-wrap: wrap;
 }
 
+/* strip color picker: a few small swatches under the canvas, the same
+   picker-button shape as the matcha bowl's mix-in buttons */
+.pb-theme-picker {
+  display: flex;
+  justify-content: center;
+  gap: 0.6em;
+  margin: 0 auto var(--space-3);
+}
+
+.pb-theme-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  background: var(--paper);
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.pb-theme-btn:hover { transform: translateY(-2px); }
+.pb-theme-btn:focus-visible { outline: 2px solid var(--clay-deep); outline-offset: 2px; }
+.pb-theme-btn[aria-pressed="true"] { border-color: var(--ink); }
+
+.pb-theme-swatch {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.pb-theme-matcha .pb-theme-swatch { background: linear-gradient(135deg, #8CAF3E, #557123); }
+.pb-theme-clay .pb-theme-swatch { background: linear-gradient(135deg, #D97A3F, #B85A28); }
+.pb-theme-cream .pb-theme-swatch { background: linear-gradient(135deg, #FFF8E9, #2B2114); border: 1px solid var(--line); }
+
 /* ==========================================================================
    the shared roll — positioning + pin-it form
    (the corkboard/digicam rules above this point were already in the

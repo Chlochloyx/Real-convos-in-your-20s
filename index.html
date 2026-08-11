@@ -346,6 +346,17 @@
 
         <div class="photobooth-view" id="photobooth-result-view" hidden>
           <canvas id="photobooth-canvas"></canvas>
+          <div class="pb-theme-picker" id="pb-theme-picker" role="group" aria-label="strip color">
+            <button type="button" class="pb-theme-btn pb-theme-matcha" data-theme="matcha" aria-pressed="true" aria-label="matcha green">
+              <span class="pb-theme-swatch"></span>
+            </button>
+            <button type="button" class="pb-theme-btn pb-theme-clay" data-theme="clay" aria-pressed="false" aria-label="clay orange">
+              <span class="pb-theme-swatch"></span>
+            </button>
+            <button type="button" class="pb-theme-btn pb-theme-cream" data-theme="cream" aria-pressed="false" aria-label="cream vintage">
+              <span class="pb-theme-swatch"></span>
+            </button>
+          </div>
           <div class="photobooth-actions">
             <a class="btn" id="photobooth-download" download="field-notes-and-matcha-photobooth.png" target="_blank" rel="noopener">download the strip</a>
             <button class="text-link" id="photobooth-retake" type="button">start over</button>
