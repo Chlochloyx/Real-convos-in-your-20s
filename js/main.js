@@ -1250,8 +1250,8 @@
     vietnam: {
       eyebrow: "NOC · Ho Chi Minh City",
       title: "Vietnam",
-      short: "A stint in Ho Chi Minh City with a small startup called Skilio, building the partnerships that brought over 80 Singaporean students out to see Vietnam's business landscape and startup scene firsthand.",
-      body: "I think it's fair to say this was my first time overseas for that long. And yeah, I was scared. Of course I was. Everything was different all at once: the language, the motorbikes everywhere, the food, learning to do my own laundry for the first time. Just getting through an ordinary day took some getting used to, before I even got to the actual work.\n\nI was interning at a small startup called Skilio, and most of the actual work was partnerships, not paperwork. I helped build relationships with over 30 universities and corporate partners across Vietnam, all so we could bring Singaporean students out to see the business landscape and startup ecosystem there firsthand instead of just hearing about it secondhand. We ran four immersion trips back to back, over 80 students altogether."
+      short: "A stint in Ho Chi Minh City with a small startup, building the partnerships that brought over 80 Singaporean students out to see Vietnam's business landscape and startup scene firsthand.",
+      body: "I think it's fair to say this was my first time overseas for that long. And yeah, I was scared. Of course I was. Everything was different all at once: the language, the motorbikes everywhere, the food, learning to do my own laundry for the first time. Just getting through an ordinary day took some getting used to, before I even got to the actual work.\n\nI was interning at a small startup, and most of the actual work was partnerships, not paperwork. I helped build relationships with over 30 universities and corporate partners across Vietnam, all so we could bring Singaporean students out to see the business landscape and startup ecosystem there firsthand instead of just hearing about it secondhand. We ran four immersion trips back to back, over 80 students altogether."
     },
     newyork: {
       eyebrow: "NOC · New York City",
