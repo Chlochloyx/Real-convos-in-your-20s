@@ -1174,25 +1174,29 @@
   ];
   var lastPostcardIndex = -1;
 
+  // quotes other people add (see api/letters.js) get folded in alongside
+  // the curated ones above, so "read another" can land on either. these
+  // have an id, the curated ones above don't, that's how the rest of this
+  // tells them apart (for the delete control, mainly).
+  var communityLetters = [];
+
+  function currentPostcardPool() {
+    return postcards.concat(communityLetters);
+  }
+
   var letterboxBtn = document.getElementById("letterbox-btn");
   var letterboxModal = document.getElementById("letterbox-modal");
   var letterboxClose = document.getElementById("letterbox-close");
   var postcardSingle = document.getElementById("postcard-single");
   var postcardAnother = document.getElementById("postcard-another");
+  var letterAddToggle = document.getElementById("letter-add-toggle");
+  var letterAddForm = document.getElementById("letter-add-form");
+  var letterTextInput = document.getElementById("letter-text-input");
+  var letterSignInput = document.getElementById("letter-sign-input");
+  var letterAddStatus = document.getElementById("letter-add-status");
 
-  function showRandomPostcard() {
-    if (!postcardSingle || !postcards.length) return;
-    var idx = lastPostcardIndex;
-    if (postcards.length > 1) {
-      while (idx === lastPostcardIndex) {
-        idx = Math.floor(Math.random() * postcards.length);
-      }
-    } else {
-      idx = 0;
-    }
-    lastPostcardIndex = idx;
-    var pc = postcards[idx];
-
+  function renderPostcard(pc) {
+    if (!postcardSingle) return;
     var card = document.createElement("div");
     card.className = "postcard postcard-standalone";
     card.style.transform = "rotate(" + (Math.random() * 3 - 1.5).toFixed(1) + "deg)";
@@ -1204,17 +1208,75 @@
     var text = document.createElement("p");
     text.textContent = "“" + pc.text + "”";
 
-    var sign = document.createElement("span");
-    sign.className = "postcard-sign";
-    sign.textContent = "· " + pc.sign;
-
     card.appendChild(stamp);
     card.appendChild(text);
-    card.appendChild(sign);
+
+    if (pc.sign) {
+      var sign = document.createElement("span");
+      sign.className = "postcard-sign";
+      sign.textContent = "· " + pc.sign;
+      card.appendChild(sign);
+    } else if (pc.id) {
+      // a community quote with nobody's name on it, still worth a little
+      // attribution line instead of just trailing off after the text
+      var unsigned = document.createElement("span");
+      unsigned.className = "postcard-sign";
+      unsigned.textContent = "· shared here, unsigned";
+      card.appendChild(unsigned);
+    }
+
+    // only ever shown for quotes people actually added (pc.id), never the
+    // curated ones, and only once admin mode is unlocked, same gate as
+    // every other delete control on the site
+    if (pc.id && document.body.classList.contains("admin-mode")) {
+      var del = document.createElement("button");
+      del.type = "button";
+      del.className = "text-link postcard-delete";
+      del.textContent = "remove this one";
+      del.addEventListener("click", function () {
+        del.disabled = true;
+        del.textContent = "removing…";
+        fetch("/api/letters?id=" + encodeURIComponent(pc.id) + "&passcode=" + encodeURIComponent(ADMIN_PASSCODE), {
+          method: "DELETE"
+        }).then(function (res) { return res.ok; }).catch(function () { return false; }).then(function (ok) {
+          if (!ok) {
+            del.disabled = false;
+            del.textContent = "remove this one";
+            return;
+          }
+          communityLetters = communityLetters.filter(function (l) { return l.id !== pc.id; });
+          showRandomPostcard();
+        });
+      });
+      card.appendChild(del);
+    }
 
     postcardSingle.innerHTML = "";
     postcardSingle.appendChild(card);
   }
+
+  function showRandomPostcard() {
+    var pool = currentPostcardPool();
+    if (!postcardSingle || !pool.length) return;
+    var idx = lastPostcardIndex;
+    if (pool.length > 1) {
+      while (idx === lastPostcardIndex) {
+        idx = Math.floor(Math.random() * pool.length);
+      }
+    } else {
+      idx = 0;
+    }
+    lastPostcardIndex = idx;
+    renderPostcard(pool[idx]);
+  }
+
+  // pick up anything other visitors have added since the curated list was
+  // written, so it's in the rotation the first time someone opens the
+  // letterbox, not just after they've clicked "read another" a few times
+  fetch("/api/letters")
+    .then(function (res) { return res.json(); })
+    .then(function (data) { communityLetters = (data && data.letters) || []; })
+    .catch(function () { /* curated quotes still work fine without this */ });
 
   if (letterboxBtn && letterboxModal) {
     letterboxBtn.addEventListener("click", function () {
@@ -1236,6 +1298,55 @@
     });
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape") closeLetterbox();
+    });
+  }
+
+  if (letterAddToggle && letterAddForm) {
+    letterAddToggle.addEventListener("click", function () {
+      var showing = letterAddForm.hidden;
+      letterAddForm.hidden = !showing;
+      letterAddToggle.setAttribute("aria-expanded", showing ? "true" : "false");
+      letterAddToggle.textContent = showing ? "never mind" : "add your own quote";
+      if (showing && letterTextInput) letterTextInput.focus();
+    });
+  }
+
+  if (letterAddForm) {
+    letterAddForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var text = letterTextInput ? letterTextInput.value.trim() : "";
+      if (!text) return;
+      var sign = letterSignInput ? letterSignInput.value.trim() : "";
+
+      var submitBtn = letterAddForm.querySelector("button[type='submit']");
+      if (submitBtn) submitBtn.disabled = true;
+      if (letterAddStatus) letterAddStatus.textContent = "";
+
+      fetch("/api/letters", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: text, sign: sign })
+      }).then(function (res) {
+        if (!res.ok) throw new Error("post failed");
+        return res.json();
+      }).then(function (data) {
+        communityLetters.push(data.letter);
+        letterAddForm.reset();
+        letterAddForm.hidden = true;
+        if (letterAddToggle) {
+          letterAddToggle.setAttribute("aria-expanded", "false");
+          letterAddToggle.textContent = "add your own quote";
+        }
+        lastPostcardIndex = -1; // so it's not skipped as "the one we just showed"
+        var pool = currentPostcardPool();
+        lastPostcardIndex = pool.indexOf(data.letter);
+        renderPostcard(data.letter);
+        if (letterAddStatus) letterAddStatus.textContent = "added, thank you for that 🫂";
+      }).catch(function () {
+        if (letterAddStatus) letterAddStatus.textContent = "couldn't add that right now, try again in a moment";
+      }).finally(function () {
+        if (submitBtn) submitBtn.disabled = false;
+      });
     });
   }
 
@@ -1399,6 +1510,9 @@
 
   var stirBowl = document.getElementById("stir-bowl");
   var foamSwirl = document.getElementById("foam-swirl");
+  var matchaSurface = document.getElementById("matcha-surface");
+  var stirCleanupTimer = null;
+  var flashCleanupTimer = null;
 
   if (stirBowl && foamSwirl) {
     stirBowl.addEventListener("click", function () {
@@ -1406,9 +1520,28 @@
       void foamSwirl.getBBox(); // restart the animation even on rapid repeat clicks
       foamSwirl.classList.add("stirring");
       blendMixinsIn();
-    });
-    foamSwirl.addEventListener("animationend", function () {
-      foamSwirl.classList.remove("stirring");
+
+      // a timeout (matching the spin's own 1.1s) cleans this up instead of
+      // waiting on the spin's animationend event, which never fires when
+      // "reduce motion" is on and the spin is disabled, that used to leave
+      // the swirl stuck dimmed at 50% opacity after the very first tap
+      clearTimeout(stirCleanupTimer);
+      stirCleanupTimer = setTimeout(function () {
+        foamSwirl.classList.remove("stirring");
+      }, 1150);
+
+      // and a quick brightness flash on the matcha itself, a second, more
+      // obvious cue for phones where the spin barely reads (see the
+      // reduced-motion note on #matcha-surface in style.css)
+      if (matchaSurface) {
+        matchaSurface.classList.remove("stirring");
+        void matchaSurface.getBoundingClientRect();
+        matchaSurface.classList.add("stirring");
+        clearTimeout(flashCleanupTimer);
+        flashCleanupTimer = setTimeout(function () {
+          matchaSurface.classList.remove("stirring");
+        }, 550);
+      }
     });
   }
 

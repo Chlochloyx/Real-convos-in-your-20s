@@ -98,7 +98,7 @@
           <ellipse cx="150" cy="272" rx="82" ry="12" fill="var(--ink)" opacity="0.15"/>
           <path d="M50 138C40 176 55 226 88 246L212 246C245 226 260 176 250 138Z" fill="url(#rimGrad)" stroke="var(--ink)" stroke-width="3"/>
           <ellipse cx="150" cy="138" rx="100" ry="30" fill="#D9AE6E" stroke="var(--ink)" stroke-width="3"/>
-          <ellipse cx="150" cy="140" rx="82" ry="22" fill="url(#bowlGrad)" stroke="#3D4A22" stroke-width="2"/>
+          <ellipse id="matcha-surface" cx="150" cy="140" rx="82" ry="22" fill="url(#bowlGrad)" stroke="#3D4A22" stroke-width="2"/>
           <path d="M62 126A100 30 0 0 1 128 100" stroke="#FFFFFF" stroke-width="4" opacity="0.3" fill="none" stroke-linecap="round"/>
 
           <g transform="translate(150 140) scale(1 0.27)" clip-path="url(#matchaClip)">
@@ -379,6 +379,22 @@
         <button class="text-link" id="postcard-another" type="button">read another
           <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
+      </div>
+
+      <div class="letter-add" id="letter-add">
+        <button class="text-link" id="letter-add-toggle" type="button" aria-expanded="false">add your own quote</button>
+        <form id="letter-add-form" class="pin-form" hidden>
+          <label class="pin-field">
+            <span>something that might cheer someone up</span>
+            <textarea id="letter-text-input" rows="2" maxlength="240" required placeholder="a line that got you through something, something someone told you..."></textarea>
+          </label>
+          <label class="pin-field">
+            <span>who said it (optional)</span>
+            <input type="text" id="letter-sign-input" maxlength="40" placeholder="you, a friend, whoever, leave blank to stay unsigned">
+          </label>
+          <button type="submit" class="btn">add it to the letterbox</button>
+          <span class="letter-add-status" id="letter-add-status" aria-live="polite"></span>
+        </form>
       </div>
     </div>
   </div>

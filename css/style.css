@@ -659,6 +659,21 @@ h1, h2, h3 {
   .foam-swirl.stirring, .steam { animation: none; opacity: 0.5; }
 }
 
+/* a clear color flash on the matcha itself when you stir, on top of the
+   swirl spinning. the spin is subtle, and on phones with "reduce motion"
+   turned on system-wide it's switched off almost entirely above, so this
+   is the cue that actually reads as "yes, that tap did something" there.
+   it's a transition, not a keyframe animation, so it still shows (just
+   snappier, since transitions also get sped up under reduced motion by
+   the site-wide rule up top) instead of going silent like the spin does. */
+#matcha-surface {
+  transition: filter 0.25s ease;
+}
+
+#matcha-surface.stirring {
+  filter: brightness(1.45) saturate(1.3);
+}
+
 .hero-doodle {
   position: absolute;
   color: var(--clay-deep);
@@ -2108,6 +2123,34 @@ body.admin-mode .pin-card:not(.pin-empty) .pin-delete { display: flex; }
   flex: none;
   width: 100%;
   max-width: 320px;
+}
+
+.postcard-delete {
+  display: block;
+  margin: 0.6em auto 0;
+  font-size: 0.78rem;
+  color: var(--clay-deep);
+}
+
+/* "add your own" quote, tucked under the letterbox's read-another link */
+.letter-add {
+  max-width: 320px;
+  margin: var(--space-3) auto 0;
+  text-align: center;
+  border-top: 1px dashed var(--line);
+  padding-top: var(--space-3);
+}
+
+.letter-add .pin-form {
+  margin-top: var(--space-3);
+  text-align: left;
+}
+
+.letter-add-status {
+  display: block;
+  margin-top: 0.5em;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
 }
 
 /* ==========================================================================
