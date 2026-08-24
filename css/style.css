@@ -3,21 +3,22 @@
    ========================================================================== */
 
 :root {
-  /* color — warm neutral base, two accents used consistently everywhere */
+  /* color — warm neutral base, two BOLD, saturated accents used consistently
+     everywhere (deliberately punchier than a muted/pastel palette) */
   --cream:        #FFF8E9;
   --paper:        #FFEFD3;
   --paper-deep:   #FCE2B8;
   --ink:          #2B2114;
   --ink-soft:     #6B5A44;
-  --matcha:       #8CAF3E;
-  --matcha-deep:  #557123;
-  --matcha-pale:  #E6F0C9;
+  --matcha:       #6DAE1F;
+  --matcha-deep:  #2F5A0A;
+  --matcha-pale:  #D9F0B0;
   --clay:         #D97A3F;
   --clay-deep:    #B85A28;
   --clay-pale:    #FBE2C8;
-  --sky-pale:     #DCEAEF;
-  --sky:          #8B9DB8;
-  --sky-deep:     #4F5F78;
+  --sky-pale:     #D7E4FF;
+  --sky:          #2F63E0;
+  --sky-deep:     #17357E;
   --line:         #F0D9A8;
 
   /* type */
@@ -2020,7 +2021,7 @@ body.admin-mode .pin-card:not(.pin-empty) .pin-delete { display: flex; }
   border-radius: 50%;
 }
 
-.pb-theme-matcha .pb-theme-swatch { background: linear-gradient(135deg, #8CAF3E, #557123); }
+.pb-theme-matcha .pb-theme-swatch { background: linear-gradient(135deg, #6DAE1F, #2F5A0A); }
 .pb-theme-clay .pb-theme-swatch { background: linear-gradient(135deg, #D97A3F, #B85A28); }
 .pb-theme-cream .pb-theme-swatch { background: linear-gradient(135deg, #FFF8E9, #2B2114); border: 1px solid var(--line); }
 
