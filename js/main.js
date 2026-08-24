@@ -741,7 +741,7 @@
   // already made, reusing the same green/orange accents as the rest of
   // the site plus a plainer cream one for a more classic photobooth look
   var PB_THEMES = {
-    matcha: { bgTop: "#F2F4DC", bgBottom: "#FBF3E3", frameFill: "#FFF8E9", frameStroke: "#2F5A0A" },
+    matcha: { bgTop: "#F2F4DC", bgBottom: "#FBF3E3", frameFill: "#FFF8E9", frameStroke: "#6B8F52" },
     clay: { bgTop: "#FBE2C8", bgBottom: "#FFF3E3", frameFill: "#FFF8E9", frameStroke: "#B85A28" },
     cream: { bgTop: "#FFF8E9", bgBottom: "#FFEFD3", frameFill: "#FFFFFF", frameStroke: "#2B2114" }
   };
@@ -758,7 +758,7 @@
      for decorating the corners of the printed strip */
   function pbDrawPet(ctx, cx, cy, r, type, rotationDeg) {
     var palette = {
-      matcha: { body: "#6DAE1F", edge: "#2F5A0A" },
+      matcha: { body: "#A8CC7E", edge: "#6B8F52" },
       clay: { body: "#D97A3F", edge: "#B85A28" },
       cream: { body: "#FFEFD3", edge: "#2B2114" }
     };
