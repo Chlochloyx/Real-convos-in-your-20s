@@ -687,17 +687,8 @@ h1, h2, h3 {
 .doodle-camera { top: 6%; left: 6%; width: 34px; height: 34px; color: var(--sky-deep); transform: rotate(-8deg); }
 .doodle-reel { bottom: 8%; right: 8%; width: 30px; height: 30px; color: var(--matcha-deep); }
 .doodle-leaf-hero { top: 44%; right: 0%; width: 30px; height: 30px; color: var(--matcha); transform: rotate(-15deg); }
-/* a small "peek of midnight sky" patch behind the moon and star1, so the
-   page itself stays light while this one corner of the hero gets a real
-   night-sky moment. star2 sits elsewhere on the light background and
-   keeps a deep/mid accent color to stay visible there. */
-.hero-night-patch { top: -6%; right: -6%; width: 200px; height: 190px; opacity: 0.92; pointer-events: none; }
-@media (max-width: 900px) {
-  .hero-night-patch { width: 150px; height: 145px; }
-}
-
-.doodle-moon { top: 2%; right: 18%; width: 28px; height: 28px; color: var(--sky-pale); transform: rotate(-12deg); }
-.doodle-star1 { top: 14%; right: 4%; width: 14px; height: 14px; color: var(--sky-pale); animation: twinkle 3.2s ease-in-out infinite; }
+.doodle-moon { top: 2%; right: 18%; width: 28px; height: 28px; color: var(--sky-deep); transform: rotate(-12deg); }
+.doodle-star1 { top: 14%; right: 4%; width: 14px; height: 14px; color: var(--sky); animation: twinkle 3.2s ease-in-out infinite; }
 .doodle-star2 { top: 60%; left: -2%; width: 11px; height: 11px; color: var(--matcha); animation: twinkle 2.6s ease-in-out infinite 0.6s; }
 
 @keyframes twinkle {
