@@ -146,11 +146,12 @@
     matcha: '<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" fill="none"><path d="M20 6C29 6 35 14 35 22C35 30 28 34 20 34C12 34 5 30 5 22C5 14 11 6 20 6Z" fill="var(--matcha)" stroke="var(--matcha-deep)" stroke-width="2"/><path d="M20 6C20 6 18 2 22 0" stroke="var(--matcha-deep)" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="15" cy="20" r="2" fill="var(--ink)"/><circle cx="25" cy="20" r="2" fill="var(--ink)"/><path d="M15 26C17.5 28.5 22.5 28.5 25 26" stroke="var(--ink)" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>',
     clay: '<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" fill="none"><circle cx="10" cy="8" r="5" fill="var(--clay)" stroke="var(--clay-deep)" stroke-width="2"/><circle cx="30" cy="8" r="5" fill="var(--clay)" stroke="var(--clay-deep)" stroke-width="2"/><path d="M20 8C29 8 35 15 35 22C35 30 28 34 20 34C12 34 5 30 5 22C5 15 11 8 20 8Z" fill="var(--clay)" stroke="var(--clay-deep)" stroke-width="2"/><circle cx="15" cy="21" r="2" fill="var(--ink)"/><circle cx="25" cy="21" r="2" fill="var(--ink)"/><path d="M17 27C18.5 28.5 21.5 28.5 23 27" stroke="var(--ink)" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>',
     cream: '<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" fill="none"><circle cx="20" cy="20" r="15" fill="var(--paper)" stroke="var(--ink)" stroke-width="2"/><circle cx="15" cy="19" r="2" fill="var(--ink)"/><circle cx="25" cy="19" r="2" fill="var(--ink)"/><circle cx="11" cy="24" r="2.6" fill="var(--clay)" opacity="0.5"/><circle cx="29" cy="24" r="2.6" fill="var(--clay)" opacity="0.5"/><path d="M16 25C18 27 22 27 24 25" stroke="var(--ink)" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>',
-    house: '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.5 12.5L12 5L20.5 12.5" fill="#D97A3F" stroke="#B85A28" stroke-width="1.6" stroke-linejoin="round"/><path d="M6.5 11V18.5C6.5 19.3 7.2 20 8 20H16C16.8 20 17.5 19.3 17.5 18.5V11" fill="#FFF8E9" stroke="#B85A28" stroke-width="1.6" stroke-linejoin="round"/><path d="M10.2 20V16C10.2 15.4 10.7 15 11.2 15H12.8C13.3 15 13.8 15.4 13.8 16V20" fill="#557123" stroke="#3D4A22" stroke-width="1.1" stroke-linejoin="round"/><circle cx="12.9" cy="17.5" r="0.5" fill="#FFF8E9"/></svg>',
+    house: '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.5 12.5L12 5L20.5 12.5" fill="#D97A3F" stroke="#B85A28" stroke-width="1.6" stroke-linejoin="round"/><path d="M6.5 11V18.5C6.5 19.3 7.2 20 8 20H16C16.8 20 17.5 19.3 17.5 18.5V11" fill="#14152B" stroke="#B85A28" stroke-width="1.6" stroke-linejoin="round"/><path d="M10.2 20V16C10.2 15.4 10.7 15 11.2 15H12.8C13.3 15 13.8 15.4 13.8 16V20" fill="#557123" stroke="#3D4A22" stroke-width="1.1" stroke-linejoin="round"/><circle cx="12.9" cy="17.5" r="0.5" fill="#14152B"/></svg>',
     plant: '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 13H15L14.2 20.5C14.1 20.8 13.9 21 13.6 21H10.4C10.1 21 9.9 20.8 9.8 20.5L9 13Z" fill="#D97A3F" stroke="#B85A28" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.5 13H15.5" stroke="#B85A28" stroke-width="1.4" stroke-linecap="round"/><path d="M12 13C12 13 12.5 7 9.5 4.5C9.5 4.5 13.5 3.3 13.8 8" fill="#8CAF3E" stroke="#557123" stroke-width="1.3" stroke-linejoin="round"/><path d="M12 13C12 13 11.5 6.5 15.3 5C15.3 5 12 4 11 8" fill="#8CAF3E" stroke="#557123" stroke-width="1.3" stroke-linejoin="round"/></svg>',
-    cup: '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 9H17L16 19C16 20 15 21 14 21H8C7 21 6 20 6 19L5 9Z" fill="#FFF8E9" stroke="#2B2114" stroke-width="1.6" stroke-linejoin="round"/><path d="M6.4 11H15.6L15 17.5C14.9 18.6 14.3 19.3 13.3 19.3H8.7C7.7 19.3 7.1 18.6 7 17.5L6.4 11Z" fill="#8CAF3E"/></svg>',
+    cup: '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 9H17L16 19C16 20 15 21 14 21H8C7 21 6 20 6 19L5 9Z" fill="#14152B" stroke="#F1EEFC" stroke-width="1.6" stroke-linejoin="round"/><path d="M6.4 11H15.6L15 17.5C14.9 18.6 14.3 19.3 13.3 19.3H8.7C7.7 19.3 7.1 18.6 7 17.5L6.4 11Z" fill="#8CAF3E"/></svg>',
     sky: '<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" fill="none"><path d="M13 10L8 3M27 10L32 3" stroke="var(--sky-deep)" stroke-width="2" stroke-linecap="round"/><path d="M20 6C29 6 35 14 35 22C35 30 28 34 20 34C12 34 5 30 5 22C5 14 11 6 20 6Z" fill="var(--sky-pale)" stroke="var(--sky-deep)" stroke-width="2"/><circle cx="15" cy="20" r="2" fill="var(--ink)"/><circle cx="25" cy="20" r="2" fill="var(--ink)"/><path d="M15 26C17.5 28.5 22.5 28.5 25 26" stroke="var(--ink)" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>',
-    berry: '<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" fill="none"><circle cx="20" cy="2" r="2.2" fill="var(--clay)" stroke="var(--clay-deep)" stroke-width="1.2"/><circle cx="16.5" cy="4" r="2.2" fill="var(--clay)" stroke="var(--clay-deep)" stroke-width="1.2"/><circle cx="23.5" cy="4" r="2.2" fill="var(--clay)" stroke="var(--clay-deep)" stroke-width="1.2"/><circle cx="20" cy="4.5" r="1.6" fill="var(--matcha)"/><path d="M20 6C29 6 35 14 35 22C35 30 28 34 20 34C12 34 5 30 5 22C5 14 11 6 20 6Z" fill="var(--clay-pale)" stroke="var(--clay-deep)" stroke-width="2"/><circle cx="15" cy="20" r="2" fill="var(--ink)"/><circle cx="25" cy="20" r="2" fill="var(--ink)"/><path d="M15 26C17.5 28.5 22.5 28.5 25 26" stroke="var(--ink)" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>'
+    berry: '<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" fill="none"><circle cx="20" cy="2" r="2.2" fill="var(--clay)" stroke="var(--clay-deep)" stroke-width="1.2"/><circle cx="16.5" cy="4" r="2.2" fill="var(--clay)" stroke="var(--clay-deep)" stroke-width="1.2"/><circle cx="23.5" cy="4" r="2.2" fill="var(--clay)" stroke="var(--clay-deep)" stroke-width="1.2"/><circle cx="20" cy="4.5" r="1.6" fill="var(--matcha)"/><path d="M20 6C29 6 35 14 35 22C35 30 28 34 20 34C12 34 5 30 5 22C5 14 11 6 20 6Z" fill="var(--clay-pale)" stroke="var(--clay-deep)" stroke-width="2"/><circle cx="15" cy="20" r="2" fill="var(--ink)"/><circle cx="25" cy="20" r="2" fill="var(--ink)"/><path d="M15 26C17.5 28.5 22.5 28.5 25 26" stroke="var(--ink)" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>',
+    cat: '<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" fill="none"><path d="M11 10L7.5 1.5L15.5 8Z" fill="#C7C2E8" stroke="#8B84C4" stroke-width="1.6" stroke-linejoin="round"/><path d="M29 10L32.5 1.5L24.5 8Z" fill="#C7C2E8" stroke="#8B84C4" stroke-width="1.6" stroke-linejoin="round"/><circle cx="20" cy="21" r="15" fill="#C7C2E8" stroke="#8B84C4" stroke-width="2"/><path d="M7.5 22H12.5M27.5 22H32.5" stroke="#8B84C4" stroke-width="1.2" stroke-linecap="round" opacity="0.75"/><circle cx="15" cy="20" r="2" fill="var(--ink)"/><circle cx="25" cy="20" r="2" fill="var(--ink)"/><path d="M17.5 25.5C18.5 27 21.5 27 22.5 25.5" stroke="var(--ink)" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>'
   };
 
   var petPicker = document.querySelector(".pet-picker");
@@ -741,7 +742,7 @@
   // already made, reusing the same green/orange accents as the rest of
   // the site plus a plainer cream one for a more classic photobooth look
   var PB_THEMES = {
-    matcha: { bgTop: "#F2F4DC", bgBottom: "#FBF3E3", frameFill: "#FFF8E9", frameStroke: "#6B8F52" },
+    matcha: { bgTop: "#F2F4DC", bgBottom: "#FBF3E3", frameFill: "#FFF8E9", frameStroke: "#4CAF2E" },
     clay: { bgTop: "#FBE2C8", bgBottom: "#FFF3E3", frameFill: "#FFF8E9", frameStroke: "#B85A28" },
     cream: { bgTop: "#FFF8E9", bgBottom: "#FFEFD3", frameFill: "#FFFFFF", frameStroke: "#2B2114" }
   };
@@ -758,7 +759,7 @@
      for decorating the corners of the printed strip */
   function pbDrawPet(ctx, cx, cy, r, type, rotationDeg) {
     var palette = {
-      matcha: { body: "#A8CC7E", edge: "#6B8F52" },
+      matcha: { body: "#7FE05C", edge: "#4CAF2E" },
       clay: { body: "#D97A3F", edge: "#B85A28" },
       cream: { body: "#FFEFD3", edge: "#2B2114" }
     };
@@ -809,12 +810,12 @@
 
     var eyeOffsetX = r * 0.32;
     var eyeR = Math.max(1.2, r * 0.11);
-    ctx.fillStyle = "#2B2114";
+    ctx.fillStyle = "#F1EEFC";
     ctx.beginPath(); ctx.arc(-eyeOffsetX, -r * 0.05, eyeR, 0, Math.PI * 2); ctx.fill();
     ctx.beginPath(); ctx.arc(eyeOffsetX, -r * 0.05, eyeR, 0, Math.PI * 2); ctx.fill();
 
     ctx.beginPath();
-    ctx.strokeStyle = "#2B2114";
+    ctx.strokeStyle = "#F1EEFC";
     ctx.lineWidth = Math.max(1, r * 0.09);
     ctx.lineCap = "round";
     ctx.arc(0, r * 0.05, r * 0.35, 0.15 * Math.PI, 0.85 * Math.PI);
@@ -840,7 +841,7 @@
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, geo.width, geo.height);
 
-    // little matcha bowl doodle up top, so it reads as "field notes & matcha" before you even hit the caption
+    // little matcha bowl doodle up top, so it reads as "midnight matcha" before you even hit the caption
     ctx.save();
     ctx.translate(geo.width / 2, geo.topMargin / 2 + 2);
     ctx.strokeStyle = theme.frameStroke;
@@ -936,7 +937,7 @@
     pbDownload.addEventListener("click", function (e) {
       if (!pbShareFile) return; // no share support here, let the normal download link happen
       e.preventDefault();
-      navigator.share({ files: [pbShareFile], title: "field notes & matcha" }).catch(function () {
+      navigator.share({ files: [pbShareFile], title: "midnight matcha" }).catch(function () {
         // user backed out of the share sheet, or it failed silently, either
         // way there's nothing useful to show them for that
       });
@@ -945,10 +946,10 @@
 
   function pbFinishStrip(ctx, geo) {
     var capY = geo.topMargin + geo.cellSize * geo.shots + geo.gap * (geo.shots - 1) + geo.captionHeight / 2;
-    ctx.fillStyle = "#2B2114";
+    ctx.fillStyle = "#F1EEFC";
     ctx.textAlign = "center";
     ctx.font = "italic 20px Georgia, 'Times New Roman', serif";
-    ctx.fillText("field notes & matcha", geo.width / 2, capY - 6);
+    ctx.fillText("midnight matcha", geo.width / 2, capY - 6);
     ctx.font = "13px 'Courier New', monospace";
     ctx.fillStyle = "#6b5f4c";
     var dateStr = new Date().toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });

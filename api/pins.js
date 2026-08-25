@@ -15,7 +15,7 @@ const ALLOWED_TOPICS = [
   "exchange", "travel", "pressure", "career", "deep",
   "money", "relationships", "burnout", "adulting", "random"
 ];
-const ALLOWED_PETS = ["matcha", "clay", "cream", "house", "plant", "cup", "sky", "berry"];
+const ALLOWED_PETS = ["matcha", "clay", "cream", "house", "plant", "cup", "sky", "berry", "cat"];
 
 async function redis(command) {
   const res = await fetch(REDIS_URL, {

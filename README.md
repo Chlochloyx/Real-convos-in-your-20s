@@ -1,4 +1,4 @@
-# field notes & matcha
+# midnight matcha
 
 A cozy, community-first personal site for 20-somethings figuring life out together. Real thoughts, a shared wall for other people's stories, and a few small interactive bits along the way (a matcha bowl you can stir, a photobooth, a letterbox of real quotes).
 
