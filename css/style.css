@@ -3,28 +3,25 @@
    ========================================================================== */
 
 :root {
-  /* color — a midnight sky base (deep navy/indigo), two glowing accents.
-     "cream" and "ink" keep their original names but now hold the opposite
-     ends of the palette: cream = darkest (page/surface backgrounds), ink =
-     palest (main text, and the light text color used on colored/dark
-     surfaces) — every existing var(--cream)/var(--ink) usage already
-     assumed "one dark tone, one light tone", so this reads correctly
-     everywhere without needing to touch each call site individually. */
-  --cream:        #14152B;
-  --paper:        #1E2044;
-  --paper-deep:   #262A56;
-  --ink:          #F1EEFC;
-  --ink-soft:     #A9A2CC;
-  --matcha:       #7FE05C;
-  --matcha-deep:  #4CAF2E;
-  --matcha-pale:  #DCF3C8;
+  /* color — back to the warm cream/paper base with soft pastel accents.
+     the dark "midnight" theme didn't land, so this reverts cream/ink/paper
+     and the accent trios to their light values; the midnight matcha name,
+     the moon/star doodles, and the moon cat pet all stay. */
+  --cream:        #FFF8E9;
+  --paper:        #FFEFD3;
+  --paper-deep:   #FCE2B8;
+  --ink:          #2B2114;
+  --ink-soft:     #6B5A44;
+  --matcha:       #A8CC7E;
+  --matcha-deep:  #6B8F52;
+  --matcha-pale:  #EDF6DE;
   --clay:         #D97A3F;
   --clay-deep:    #B85A28;
   --clay-pale:    #FBE2C8;
-  --sky-pale:     #DCE4FA;
-  --sky:          #8FA8F0;
-  --sky-deep:     #4A63C4;
-  --line:         #35395E;
+  --sky-pale:     #E8F0FA;
+  --sky:          #A6C2E8;
+  --sky-deep:     #6482A8;
+  --line:         #F0D9A8;
 
   /* type */
   --font-display: "Fraunces", "Iowan Old Style", "Palatino Linotype", serif;
@@ -92,8 +89,8 @@ body {
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   background-image:
-    radial-gradient(ellipse 55% 35% at 92% -5%, rgba(127,224,92,0.14), transparent 60%),
-    radial-gradient(ellipse 45% 32% at 3% 12%, rgba(143,168,240,0.09), transparent 60%);
+    radial-gradient(ellipse 55% 35% at 92% -5%, rgba(168,204,126,0.14), transparent 60%),
+    radial-gradient(ellipse 45% 32% at 3% 12%, rgba(166,196,232,0.09), transparent 60%);
   background-repeat: no-repeat;
   position: relative;
 }
@@ -463,7 +460,7 @@ h1, h2, h3 {
   right: -10%;
   width: 55%;
   height: 70%;
-  background: radial-gradient(ellipse at top right, rgba(143,168,240,0.28), rgba(127,224,92,0.12) 45%, transparent 70%);
+  background: radial-gradient(ellipse at top right, rgba(166,196,232,0.28), rgba(168,204,126,0.12) 45%, transparent 70%);
   pointer-events: none;
   z-index: 0;
   animation: leak-pulse 9s ease-in-out infinite;
@@ -690,9 +687,9 @@ h1, h2, h3 {
 .doodle-camera { top: 6%; left: 6%; width: 34px; height: 34px; color: var(--sky-deep); transform: rotate(-8deg); }
 .doodle-reel { bottom: 8%; right: 8%; width: 30px; height: 30px; color: var(--matcha-deep); }
 .doodle-leaf-hero { top: 44%; right: 0%; width: 30px; height: 30px; color: var(--matcha); transform: rotate(-15deg); }
-.doodle-moon { top: 2%; right: 18%; width: 28px; height: 28px; color: var(--sky-pale); transform: rotate(-12deg); }
-.doodle-star1 { top: 14%; right: 4%; width: 14px; height: 14px; color: var(--sky-pale); animation: twinkle 3.2s ease-in-out infinite; }
-.doodle-star2 { top: 60%; left: -2%; width: 11px; height: 11px; color: var(--matcha-pale); animation: twinkle 2.6s ease-in-out infinite 0.6s; }
+.doodle-moon { top: 2%; right: 18%; width: 28px; height: 28px; color: var(--sky-deep); transform: rotate(-12deg); }
+.doodle-star1 { top: 14%; right: 4%; width: 14px; height: 14px; color: var(--sky); animation: twinkle 3.2s ease-in-out infinite; }
+.doodle-star2 { top: 60%; left: -2%; width: 11px; height: 11px; color: var(--matcha); animation: twinkle 2.6s ease-in-out infinite 0.6s; }
 
 @keyframes twinkle {
   0%, 100% { opacity: 0.35; transform: scale(0.85); }
@@ -728,8 +725,8 @@ h1, h2, h3 {
   top: -7px;
   width: 46px;
   height: 18px;
-  background: repeating-linear-gradient(45deg, rgba(143,168,240,0.5), rgba(143,168,240,0.5) 6px, rgba(143,168,240,0.28) 6px, rgba(143,168,240,0.28) 12px);
-  border: 1px solid rgba(143,168,240,0.4);
+  background: repeating-linear-gradient(45deg, rgba(166,196,232,0.5), rgba(166,196,232,0.5) 6px, rgba(166,196,232,0.28) 6px, rgba(166,196,232,0.28) 12px);
+  border: 1px solid rgba(166,196,232,0.4);
 }
 
 .currently::before { left: 8%; transform: rotate(-4deg); }
@@ -910,14 +907,7 @@ body.admin-mode .journal-delete { display: inline-flex; }
   background: var(--sky-pale);
   border: 1px dashed var(--sky-deep);
   border-radius: 10px;
-  /* sky-pale stayed a light chip color on purpose, but its label text
-     (.pin-field, reused from the pin/letter forms) assumes the page's
-     usual dark background and uses the light ink-soft color, which
-     nearly disappears against a light form like this one */
-  color: #201C40;
 }
-
-.admin-add-form .pin-field { color: #4A4470; }
 
 body.admin-mode .admin-add-form { display: flex; }
 
@@ -1203,7 +1193,7 @@ body.admin-mode .admin-add-form { display: flex; }
   gap: 4px;
   color: var(--sky-deep);
   flex-shrink: 0;
-  background: rgba(74, 99, 196, 0.05);
+  background: rgba(100, 130, 168, 0.05);
   transition: transform 0.25s ease;
 }
 
@@ -1224,7 +1214,7 @@ body.admin-mode .admin-add-form { display: flex; }
   transform: rotate(4deg);
   border-color: var(--matcha-deep);
   color: var(--matcha-deep);
-  background: rgba(76, 175, 46, 0.06);
+  background: rgba(107, 143, 82, 0.06);
 }
 .stamp-3 { transform: rotate(-3deg); }
 
@@ -1323,13 +1313,8 @@ body.admin-mode .admin-add-form { display: flex; }
    ========================================================================== */
 
 .cta-band {
-  /* matcha-deep on its own is meant for small elements (buttons, badges),
-     where a bright glowing green pops nicely against the dark page. Filling
-     a whole band with it read as a jarring neon block, so this gets its
-     own deep, muted forest green instead, in keeping with the rest of the
-     night palette. */
-  background: #1D3B14;
-  color: var(--ink);
+  background: var(--matcha-deep);
+  color: var(--cream);
   border-radius: 16px;
   padding: var(--space-5) var(--space-4);
   position: relative;
@@ -1338,33 +1323,33 @@ body.admin-mode .admin-add-form { display: flex; }
 }
 
 .cta-band .eyebrow { color: var(--matcha-pale); }
-.cta-band .eyebrow::before { background: var(--ink); }
+.cta-band .eyebrow::before { background: var(--cream); }
 
 .cta-band h2 {
-  color: var(--ink);
+  color: var(--cream);
   font-size: var(--fs-h1);
   margin: var(--space-2) auto var(--space-3);
   max-width: 22ch;
 }
 
 .cta-band p {
-  color: rgba(241,238,252,0.78);
+  color: rgba(247,241,228,0.82);
   max-width: 52ch;
   margin: 0 auto var(--space-3);
   font-size: 1.05rem;
 }
 
 .cta-band .btn {
-  background: var(--ink);
-  color: #1D3B14;
-  border-color: var(--ink);
+  background: var(--cream);
+  color: var(--ink);
+  border-color: var(--cream);
 }
 
-.cta-band .btn:hover { background: var(--sky-deep); border-color: var(--sky-deep); color: var(--ink); }
+.cta-band .btn:hover { background: var(--sky-deep); border-color: var(--sky-deep); color: var(--cream); }
 
 .cta-band .icon-bg {
   position: absolute;
-  color: var(--ink);
+  color: var(--cream);
   opacity: 0.08;
 }
 
@@ -1463,7 +1448,7 @@ body.admin-mode .admin-add-form { display: flex; }
   bottom: 0;
   left: 122px;
   width: 2px;
-  background: rgba(74, 99, 196, 0.25);
+  background: rgba(100, 130, 168, 0.25);
 }
 
 @media (max-width: 620px) {
@@ -1686,23 +1671,6 @@ body.admin-mode .admin-add-form { display: flex; }
 .pin-card:not(.pin-empty):nth-child(6n+5) { background: var(--sky-pale); }
 .pin-card:not(.pin-empty):nth-child(6n+6) { background: var(--cream); }
 
-/* three of those six rotation colors (2/3/5) stayed light pastel on
-   purpose, for variety against the dark ones, but .pin-card p/.pin-sign
-   use var(--ink)/var(--ink-soft), which are now light (this theme's main
-   text color, meant for the dark cards) — on these specific light cards
-   that read as pale text nearly vanishing into a pale background, so they
-   need their own dark text instead */
-.pin-card:not(.pin-empty):nth-child(6n+2) p,
-.pin-card:not(.pin-empty):nth-child(6n+3) p,
-.pin-card:not(.pin-empty):nth-child(6n+5) p {
-  color: #201C40;
-}
-.pin-card:not(.pin-empty):nth-child(6n+2) .pin-sign,
-.pin-card:not(.pin-empty):nth-child(6n+3) .pin-sign,
-.pin-card:not(.pin-empty):nth-child(6n+5) .pin-sign {
-  color: #4A4470;
-}
-
 .pin-card:nth-child(3n+1) { transform: rotate(-2deg); }
 .pin-card:nth-child(3n+2) { transform: rotate(1.5deg); }
 .pin-card:nth-child(3n+3) { transform: rotate(-1deg); }
@@ -1769,9 +1737,7 @@ body.admin-mode .admin-add-form { display: flex; }
   padding: var(--space-2) var(--space-3);
   margin-bottom: var(--space-3);
   font-size: 0.9rem;
-  /* light chip background on purpose, so it needs its own dark text
-     instead of the page's usual light var(--ink) */
-  color: #201C40;
+  color: var(--ink);
 }
 
 .admin-bar.visible { display: flex; }
@@ -2069,7 +2035,7 @@ body.admin-mode .pin-card:not(.pin-empty) .pin-delete { display: flex; }
   border-radius: 50%;
 }
 
-.pb-theme-matcha .pb-theme-swatch { background: linear-gradient(135deg, #7FE05C, #4CAF2E); }
+.pb-theme-matcha .pb-theme-swatch { background: linear-gradient(135deg, #A8CC7E, #6B8F52); }
 .pb-theme-clay .pb-theme-swatch { background: linear-gradient(135deg, #D97A3F, #B85A28); }
 .pb-theme-cream .pb-theme-swatch { background: linear-gradient(135deg, #FFF8E9, #2B2114); border: 1px solid var(--line); }
 
@@ -2142,7 +2108,7 @@ body.admin-mode .pin-card:not(.pin-empty) .pin-delete { display: flex; }
   height: 32px;
   border: 1.5px dashed var(--sky-deep);
   border-radius: 3px;
-  background: rgba(74, 99, 196, 0.06);
+  background: rgba(100, 130, 168, 0.06);
 }
 
 .postcard p {
