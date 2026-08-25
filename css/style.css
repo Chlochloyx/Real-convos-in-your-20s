@@ -910,7 +910,14 @@ body.admin-mode .journal-delete { display: inline-flex; }
   background: var(--sky-pale);
   border: 1px dashed var(--sky-deep);
   border-radius: 10px;
+  /* sky-pale stayed a light chip color on purpose, but its label text
+     (.pin-field, reused from the pin/letter forms) assumes the page's
+     usual dark background and uses the light ink-soft color, which
+     nearly disappears against a light form like this one */
+  color: #201C40;
 }
+
+.admin-add-form .pin-field { color: #4A4470; }
 
 body.admin-mode .admin-add-form { display: flex; }
 
@@ -1679,6 +1686,23 @@ body.admin-mode .admin-add-form { display: flex; }
 .pin-card:not(.pin-empty):nth-child(6n+5) { background: var(--sky-pale); }
 .pin-card:not(.pin-empty):nth-child(6n+6) { background: var(--cream); }
 
+/* three of those six rotation colors (2/3/5) stayed light pastel on
+   purpose, for variety against the dark ones, but .pin-card p/.pin-sign
+   use var(--ink)/var(--ink-soft), which are now light (this theme's main
+   text color, meant for the dark cards) — on these specific light cards
+   that read as pale text nearly vanishing into a pale background, so they
+   need their own dark text instead */
+.pin-card:not(.pin-empty):nth-child(6n+2) p,
+.pin-card:not(.pin-empty):nth-child(6n+3) p,
+.pin-card:not(.pin-empty):nth-child(6n+5) p {
+  color: #201C40;
+}
+.pin-card:not(.pin-empty):nth-child(6n+2) .pin-sign,
+.pin-card:not(.pin-empty):nth-child(6n+3) .pin-sign,
+.pin-card:not(.pin-empty):nth-child(6n+5) .pin-sign {
+  color: #4A4470;
+}
+
 .pin-card:nth-child(3n+1) { transform: rotate(-2deg); }
 .pin-card:nth-child(3n+2) { transform: rotate(1.5deg); }
 .pin-card:nth-child(3n+3) { transform: rotate(-1deg); }
@@ -1745,7 +1769,9 @@ body.admin-mode .admin-add-form { display: flex; }
   padding: var(--space-2) var(--space-3);
   margin-bottom: var(--space-3);
   font-size: 0.9rem;
-  color: var(--ink);
+  /* light chip background on purpose, so it needs its own dark text
+     instead of the page's usual light var(--ink) */
+  color: #201C40;
 }
 
 .admin-bar.visible { display: flex; }
