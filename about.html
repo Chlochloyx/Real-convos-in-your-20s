@@ -2,13 +2,26 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem("mm-theme");
+    var theme = saved;
+    if (!theme) {
+      var hour = new Date().getHours();
+      theme = (hour >= 19 || hour < 7) ? "dark" : "light";
+    }
+    if (theme === "dark") document.documentElement.setAttribute("data-theme", "dark");
+  } catch (e) {}
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>midnight matcha · about</title>
 <meta name="description" content="Singaporean, NUS Business student, and the honest, unfiltered version of figuring out my 20s, written for anyone else doing the same thing." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Special+Elite&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=4">
+<link rel="stylesheet" href="css/style.css?v=5">
 </head>
 <body>
 
@@ -36,6 +49,10 @@
         Say hi
       </a>
     </div>
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="toggle night mode" aria-pressed="false">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.6"/><path d="M12 2.5V5M12 19V21.5M21.5 12H19M5 12H2.5M18.4 5.6L16.7 7.3M7.3 16.7L5.6 18.4M18.4 18.4L16.7 16.7M7.3 7.3L5.6 5.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14.5 3C9 3.5 5 8 5 13C5 18.5 9.5 23 15 23C10.8 21.5 8 17.5 8 13C8 8.5 10.8 4.5 14.5 3Z" fill="currentColor"/></svg>
+    </button>
     <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-panel">
       <span></span>
     </button>

@@ -1,6 +1,6 @@
 # midnight matcha
 
-A cozy, community-first personal site for 20-somethings figuring life out together. Real thoughts, a shared wall for other people's stories, and a few small interactive bits along the way (a matcha bowl you can stir, a photobooth, a letterbox of real quotes).
+A cozy, community-first personal site for 20-somethings figuring life out together. Real thoughts, a shared wall for other people's stories, and a few small interactive bits along the way (a matcha bowl you can stir, a photobooth, a letterbox of real quotes, a night mode that knows what time it is).
 
 ## Structure
 
@@ -44,3 +44,7 @@ Seed pins (the ones baked into `share.html` itself) are a separate, simpler case
 ## The letterbox
 
 Visitors can add their own quote to the home page's letterbox, not just read the curated ones baked into `js/main.js`. Community quotes are read/written by `api/letters.js` (same Upstash Redis instance as the shared wall, its own list key) and get mixed into the same random "read another" rotation as the curated quotes. Moderation works the same way as the shared wall: once admin mode is unlocked, a "remove this one" control shows up on community quotes (never on the curated ones), which deletes through the API against the `ADMIN_PASSCODE` environment variable.
+
+## Night mode
+
+The moon toggle in the nav flips the whole site to a dark palette, saved in `localStorage` so it sticks on the next visit. Until a visitor ever touches it, the very first page load picks a default from their local clock — dark between 7pm and 7am, light otherwise — rather than defaulting to light for everyone. All of this is CSS custom properties (see the `[data-theme="dark"]` block at the top of `css/style.css`) plus a small inline script at the top of each page's `<head>` that sets the attribute before first paint, so there's no flash of the wrong theme.

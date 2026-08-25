@@ -19,6 +19,26 @@
     });
   }
 
+  // night mode: the actual light/dark decision for first paint already
+  // happened in the inline <script> at the top of <head> (localStorage, or
+  // the visitor's local time of day if they've never chosen), so this just
+  // wires the toggle button to flip + remember the choice from here on.
+  var themeToggle = document.getElementById("theme-toggle");
+  if (themeToggle) {
+    themeToggle.setAttribute("aria-pressed", String(document.documentElement.getAttribute("data-theme") === "dark"));
+
+    themeToggle.addEventListener("click", function () {
+      var goingDark = document.documentElement.getAttribute("data-theme") !== "dark";
+      if (goingDark) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      } else {
+        document.documentElement.removeAttribute("data-theme");
+      }
+      themeToggle.setAttribute("aria-pressed", String(goingDark));
+      try { localStorage.setItem("mm-theme", goingDark ? "dark" : "light"); } catch (e) {}
+    });
+  }
+
   var moodButtons = document.querySelectorAll(".mood-btn");
   var moodResponse = document.getElementById("mood-response");
 

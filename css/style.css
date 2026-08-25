@@ -47,6 +47,103 @@
   --max-w: 1180px;
 }
 
+/* ==========================================================================
+   night mode — opt-in, toggled by [data-theme="dark"] on <html>. defaults
+   to whatever the visitor last chose, or (if they've never chosen) whatever
+   matches the time of day where they are. see the "night mode" toggle logic
+   near the bottom of js/main.js.
+
+   "cream" and "ink" keep their light-mode names but hold the opposite ends
+   of the palette here: cream = darkest (page/surface backgrounds), ink =
+   palest (main text, and the light text color used on colored/dark
+   surfaces) — every var(--cream)/var(--ink) usage already assumes "one dark
+   tone, one light tone", so this cascades correctly almost everywhere
+   without touching each call site. clay stays fixed on purpose — it's the
+   clay pet/photobooth theme's own identity, not site chrome. */
+:root[data-theme="dark"] {
+  --cream:        #14152B;
+  --paper:        #1E2044;
+  --paper-deep:   #262A56;
+  --ink:          #F1EEFC;
+  --ink-soft:     #A9A2CC;
+  --matcha:       #7FE05C;
+  --matcha-deep:  #4CAF2E;
+  --matcha-pale:  #DCF3C8;
+  --sky-pale:     #DCE4FA;
+  --sky:          #8FA8F0;
+  --sky-deep:     #4A63C4;
+  --line:         #35395E;
+}
+
+/* a handful of spots don't derive from --cream/--ink (ambient rgba washes,
+   or an element whose light-mode markup hardcoded the "old" relationship),
+   so those need their own explicit dark-mode values */
+[data-theme="dark"] body {
+  background-image:
+    radial-gradient(ellipse 55% 35% at 92% -5%, rgba(127,224,92,0.14), transparent 60%),
+    radial-gradient(ellipse 45% 32% at 3% 12%, rgba(143,168,240,0.09), transparent 60%);
+}
+
+[data-theme="dark"] .hero::before {
+  background: radial-gradient(ellipse at top right, rgba(143,168,240,0.28), rgba(127,224,92,0.12) 45%, transparent 70%);
+}
+
+[data-theme="dark"] .currently::before,
+[data-theme="dark"] .currently::after {
+  background: repeating-linear-gradient(45deg, rgba(143,168,240,0.5), rgba(143,168,240,0.5) 6px, rgba(143,168,240,0.28) 6px, rgba(143,168,240,0.28) 12px);
+  border-color: rgba(143,168,240,0.4);
+}
+
+[data-theme="dark"] .stamp { background: rgba(74, 99, 196, 0.05); }
+[data-theme="dark"] .stamp-2 { background: rgba(76, 175, 46, 0.06); }
+[data-theme="dark"] .notebook::before { background: rgba(74, 99, 196, 0.25); }
+[data-theme="dark"] .postcard-stamp { background: rgba(74, 99, 196, 0.06); }
+
+/* moon + star1 want a pale glow against the dark page (their light-mode
+   deep tones would nearly vanish); star2 sits on its own elsewhere and
+   already reads fine either way, so it's untouched here. */
+[data-theme="dark"] .doodle-moon,
+[data-theme="dark"] .doodle-star1 { color: var(--sky-pale); }
+
+/* .cta-band fills matcha-deep across a whole section, which in the dark
+   palette's brighter matcha-deep reads as a jarring neon block — its own
+   deep, muted green instead, same reasoning as the light theme just using
+   var(--matcha-deep) directly for a full band. the child rules below only
+   exist where markup assumed the light-mode cream/ink relationship. */
+[data-theme="dark"] .cta-band { background: #1D3B14; color: var(--ink); }
+[data-theme="dark"] .cta-band .eyebrow::before { background: var(--ink); }
+[data-theme="dark"] .cta-band h2 { color: var(--ink); }
+[data-theme="dark"] .cta-band p { color: rgba(241,238,252,0.78); }
+[data-theme="dark"] .cta-band .btn { background: var(--ink); color: #1D3B14; border-color: var(--ink); }
+[data-theme="dark"] .cta-band .btn:hover { color: var(--ink); }
+[data-theme="dark"] .cta-band .icon-bg { color: var(--ink); }
+
+/* three of the pin wall's six rotating card colors (2/3/5) stay light
+   pastel on purpose, for variety against the three dark ones — but
+   .pin-card p/.pin-sign use var(--ink)/var(--ink-soft), now light (right
+   for the dark cards, unreadable on these light ones), so they need their
+   own dark text. same root cause hits .admin-bar and .admin-add-form,
+   both light sky-pale panels using the page's now-light default text. */
+[data-theme="dark"] .pin-card:not(.pin-empty):nth-child(6n+2) p,
+[data-theme="dark"] .pin-card:not(.pin-empty):nth-child(6n+3) p,
+[data-theme="dark"] .pin-card:not(.pin-empty):nth-child(6n+5) p {
+  color: #201C40;
+}
+[data-theme="dark"] .pin-card:not(.pin-empty):nth-child(6n+2) .pin-sign,
+[data-theme="dark"] .pin-card:not(.pin-empty):nth-child(6n+3) .pin-sign,
+[data-theme="dark"] .pin-card:not(.pin-empty):nth-child(6n+5) .pin-sign {
+  color: #4A4470;
+}
+[data-theme="dark"] .admin-bar { color: #201C40; }
+[data-theme="dark"] .admin-add-form { color: #201C40; }
+[data-theme="dark"] .admin-add-form .pin-field { color: #4A4470; }
+
+/* the photobooth's "matcha" theme tracks the site's actual matcha brand
+   color (unlike clay/cream, which are just theme options and stay fixed),
+   but the strip you actually download stays print-like regardless of
+   whether you took it in night mode — see js/main.js, unchanged here. */
+[data-theme="dark"] .pb-theme-matcha .pb-theme-swatch { background: linear-gradient(135deg, #7FE05C, #4CAF2E); }
+
 * { box-sizing: border-box; }
 
 /* the HTML "hidden" attribute should always win, full stop. without this,
@@ -88,6 +185,7 @@ body {
   font-size: var(--fs-body);
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.25s ease, color 0.25s ease;
   background-image:
     radial-gradient(ellipse 55% 35% at 92% -5%, rgba(168,204,126,0.14), transparent 60%),
     radial-gradient(ellipse 45% 32% at 3% 12%, rgba(166,196,232,0.09), transparent 60%);
@@ -267,6 +365,28 @@ h1, h2, h3 {
 }
 
 .nav-links a:hover::after { right: 0; }
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  margin-left: var(--space-2);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.theme-toggle:hover { transform: scale(1.08); }
+.theme-toggle svg { width: 18px; height: 18px; }
+.theme-toggle .icon-moon { display: none; }
+[data-theme="dark"] .theme-toggle .icon-sun { display: none; }
+[data-theme="dark"] .theme-toggle .icon-moon { display: block; color: var(--sky-pale); }
 
 .nav-toggle {
   display: none;
