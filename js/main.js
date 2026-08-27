@@ -1388,7 +1388,7 @@
     newyork: {
       eyebrow: "NOC · New York City",
       title: "New York",
-      short: "A year in New York through NOC, working at a small accelerator that supported early-stage founders: pitch meetings, day-to-day operations, a lot of it new to me.",
+      short: "A year in New York through NOC, working at a small accelerator that supported early-stage founders, pitch meetings, day-to-day operations, a lot of it new to me.",
       body: "NOC placed me in New York for a year, working at a small accelerator that supported early-stage founders. I sat in on pitch meetings, helped with day-to-day operations, and got a much clearer sense of how much unglamorous work sits underneath a \"startup job.\"\n\nThe city itself took more adjusting to than the job did. I lived in a walk-up with a radiator that never fully turned off, and living alone there meant learning to budget properly for the first time."
     },
     china: {
