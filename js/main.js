@@ -608,12 +608,6 @@
     }
   }
 
-  function journalDateLabel(timestamp) {
-    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    var d = new Date(timestamp);
-    return months[d.getMonth()] + " " + d.getDate();
-  }
-
   function renderJournalEntry(entry, animate) {
     if (!journalList) return;
     var row = document.createElement("div");
@@ -627,10 +621,6 @@
     del.setAttribute("data-entry-id", entry.id);
     del.setAttribute("aria-label", "delete this entry");
     del.textContent = "remove";
-
-    var dateEl = document.createElement("div");
-    dateEl.className = "journal-date";
-    dateEl.textContent = journalDateLabel(entry.created || Date.now());
 
     var body = document.createElement("div");
     body.className = "journal-entry";
@@ -648,7 +638,6 @@
     body.appendChild(p);
 
     row.appendChild(del);
-    row.appendChild(dateEl);
     row.appendChild(body);
     journalList.insertBefore(row, journalList.firstChild);
 

@@ -96,7 +96,6 @@
 
 [data-theme="dark"] .stamp { background: rgba(74, 99, 196, 0.05); }
 [data-theme="dark"] .stamp-2 { background: rgba(76, 175, 46, 0.06); }
-[data-theme="dark"] .notebook::before { background: rgba(74, 99, 196, 0.25); }
 [data-theme="dark"] .postcard-stamp { background: rgba(74, 99, 196, 0.06); }
 
 /* moon + star1 want a pale glow against the dark page (their light-mode
@@ -988,9 +987,7 @@ h1, h2, h3 {
 
 .journal-row {
   position: relative;
-  display: grid;
-  grid-template-columns: 130px 1fr;
-  gap: var(--space-3);
+  display: block;
   padding: var(--space-3) 0;
   border-top: 1px solid var(--line);
 }
@@ -1033,13 +1030,6 @@ body.admin-mode .admin-add-form { display: flex; }
 
 .journal-row:last-child { border-bottom: 1px solid var(--line); }
 
-.journal-date {
-  font-family: var(--font-vintage);
-  color: var(--sky-deep);
-  font-size: 0.85rem;
-  padding-top: 2px;
-}
-
 .journal-entry h3 { font-size: 1.3rem; margin-bottom: 0.4rem; }
 .journal-entry p { color: var(--ink-soft); margin: 0; max-width: 62ch; }
 .journal-entry p + p { margin-top: 0.9em; }
@@ -1054,10 +1044,6 @@ body.admin-mode .admin-add-form { display: flex; }
   padding: 3px 9px;
   border-radius: 999px;
   margin-bottom: 0.6rem;
-}
-
-@media (max-width: 620px) {
-  .journal-row { grid-template-columns: 1fr; gap: 0.3rem; }
 }
 
 /* ==========================================================================
@@ -1547,33 +1533,6 @@ body.admin-mode .admin-add-form { display: flex; }
 }
 
 .contact-list a:hover { color: var(--sky-deep); }
-
-/* ==========================================================================
-   notebook lined-paper texture (journal page)
-   ========================================================================== */
-
-.notebook {
-  /* used to draw fixed-pitch ruled lines here, but that only lined up
-     with the old short entries. entries are longer and variable-height
-     now (multi-paragraph), so a fixed pitch drifts and cuts straight
-     through the middle of text. each .journal-row already draws its
-     own top border to separate entries, so that's the only divider now. */
-  position: relative;
-}
-
-.notebook::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 122px;
-  width: 2px;
-  background: rgba(100, 130, 168, 0.25);
-}
-
-@media (max-width: 620px) {
-  .notebook::before { display: none; }
-}
 
 /* ==========================================================================
    mood picker (interactive)
