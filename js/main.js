@@ -765,7 +765,7 @@
   var pbShots = [];
   var pbLastSource = "upload";
 
-  // three strip colorways someone can switch between once the strip's
+  // three strip colourways someone can switch between once the strip's
   // already made, reusing the same green/orange accents as the rest of
   // the site plus a plainer cream one for a more classic photobooth look
   var PB_THEMES = {
@@ -1000,7 +1000,7 @@
      { source, width, height, mirror } shots, draw them onto the strip */
   function pbBuildStrip(shots) {
     if (!pbCanvas || !shots.length) return;
-    pbLastShots = shots; // kept around so switching the color theme can redraw without retaking anything
+    pbLastShots = shots; // kept around so switching the colour theme can redraw without retaking anything
     var geo = pbGeometry(shots.length);
     pbCanvas.width = geo.width;
     pbCanvas.height = geo.height;
