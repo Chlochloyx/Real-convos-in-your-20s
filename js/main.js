@@ -55,6 +55,13 @@
   var prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   if (!prefersReduced && "IntersectionObserver" in window) {
+    // threshold is a fraction of the TARGET's own height, not the viewport's,
+    // so it silently breaks on tall .reveal sections: the journal list keeps
+    // growing as entries get added, and at ~7500px tall, 15% of it is over
+    // 1100px of required overlap, more than most phone screens are tall at
+    // all. that made the whole section permanently unrevealable on mobile.
+    // 0 just means "as soon as any part is on screen," which works no matter
+    // how tall the section grows.
     var observer = new IntersectionObserver(
       function (entries) {
         entries.forEach(function (entry) {
@@ -64,7 +71,7 @@
           }
         });
       },
-      { threshold: 0.15 }
+      { threshold: 0 }
     );
     document.querySelectorAll(".reveal").forEach(function (el) {
       observer.observe(el);
